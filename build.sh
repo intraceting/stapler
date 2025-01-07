@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Copyright (c) 2024-Present intraceting<intraceting@outlook.com>
+# Copyright (c) 2021 The STAPLER project authors. All Rights Reserved.
 #
 
 #
