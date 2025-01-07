@@ -1,0 +1,32 @@
+if(RL_BUILD_MATH)
+	add_subdirectory(rlCircularTest)
+	add_subdirectory(rlCoordinatesTest)
+	add_subdirectory(rlMathDeltaTest)
+	add_subdirectory(rlNearestNeighborsTest)
+	add_subdirectory(rlSpatialTest)
+	add_subdirectory(rlSplineTest)
+endif()
+
+if(RL_BUILD_KIN)
+	add_subdirectory(rlInverseKinematicsKinTest)
+	add_subdirectory(rlJacobianKinTest)
+endif()
+
+if(RL_BUILD_MDL)
+	add_subdirectory(rlDynamicsTest)
+	add_subdirectory(rlInverseKinematicsMdlTest)
+	add_subdirectory(rlJacobianMdlTest)
+endif()
+
+if(RL_BUILD_HAL)
+	add_subdirectory(rlHalEndianTest)
+endif()
+
+if(RL_BUILD_MDL AND RL_BUILD_SG)
+	add_subdirectory(rlCollisionTest)
+endif()
+
+if(RL_BUILD_PLAN)
+	add_subdirectory(rlEetTest)
+	add_subdirectory(rlPrmTest)
+endif()

@@ -1,0 +1,32 @@
+include(FindPackageHandleStandardArgs)
+include(SelectLibraryConfigurations)
+
+find_path(
+	LIBDC1394_INCLUDE_DIR
+	NAMES dc1394/dc1394.h
+)
+find_library(
+	LIBDC1394_LIBRARY_RELEASE
+	NAMES dc1394
+)
+select_library_configurations(LIBDC1394)
+
+set(LIBDC1394_INCLUDE_DIRS ${LIBDC1394_INCLUDE_DIR})
+set(LIBDC1394_LIBRARIES ${LIBDC1394_LIBRARY})
+
+find_package_handle_standard_args(
+	libdc1394
+	FOUND_VAR libdc1394_FOUND
+	REQUIRED_VARS LIBDC1394_INCLUDE_DIR LIBDC1394_LIBRARY
+)
+
+if(libdc1394_FOUND AND NOT TARGET libdc1394::libdc1394)
+	add_library(libdc1394::libdc1394 UNKNOWN IMPORTED)
+	if(LIBDC1394_LIBRARY_RELEASE)
+		set_property(TARGET libdc1394::libdc1394 APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
+		set_target_properties(libdc1394::libdc1394 PROPERTIES IMPORTED_LOCATION_RELEASE "${LIBDC1394_LIBRARY_RELEASE}")
+	endif()
+	set_target_properties(libdc1394::libdc1394 PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${LIBDC1394_INCLUDE_DIRS}")
+endif()
+
+mark_as_advanced(LIBDC1394_INCLUDE_DIR)
