@@ -107,7 +107,7 @@ if [ ! -f ${TARGET_PERFIX_PATH}/sbin/nginx ];then
     exit_if_error $? "nginx配置错误。" 1
 
     #编译。
-    make
+    make -s -j4
     exit_if_error $? "nginx编译错误。" 1
 
     #安装。

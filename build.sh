@@ -305,12 +305,24 @@ export TARGET_PLATFORM=$(echo ${TARGET_MACHINE} | cut -d - -f 1)
 export NATIVE_COMPILER_VERSION=$(${NATIVE_COMPILER_C} -dumpversion 2>/dev/null)
 export TARGET_COMPILER_VERSION=$(${TARGET_COMPILER_C} -dumpversion 2>/dev/null)
 
-#查找libc.so文件路径。
-TARGET_GLIBC_SO_FILE=$(find ${TARGET_COMPILER_HOME} -name libc.so.6 |grep ${TARGET_MACHINE} |head -n 1)
 
-#提取glibc最大版本。
+#提取本机平台的glibc最大版本。
 NATIVE_GLIBC_MAX_VER=$(ldd --version |head -n 1 |rev |cut -d ' ' -f 1 |rev)
-TARGET_GLIBC_MAX_VER=$(${TARGET_COMPILER_READELF} -V ${TARGET_GLIBC_SO_FILE} | grep -o 'GLIBC_[0-9]\+\.[0-9]\+' | sort -u -V -r |head -n 1 |cut -d '_' -f 2)
+
+#
+if [ "${NATIVE_PLATFORM}" == "${TARGET_PLATFORM}" ];then
+{
+    #提取目标平台的glibc最大版本。
+    TARGET_GLIBC_MAX_VER=$(ldd --version |head -n 1 |rev |cut -d ' ' -f 1 |rev)
+}
+else
+{
+    #查找目标平台的libc.so文件路径。
+    TARGET_GLIBC_SO_FILE=$(find ${TARGET_COMPILER_HOME} -name libc.so.6 |grep ${TARGET_MACHINE} |head -n 1)
+    #提取目标平台的glibc最大版本。
+    TARGET_GLIBC_MAX_VER=$(${TARGET_COMPILER_READELF} -V ${TARGET_GLIBC_SO_FILE} | grep -o 'GLIBC_[0-9]\+\.[0-9]\+' | sort -u -V -r |head -n 1 |cut -d '_' -f 2)
+}
+fi
 
 #
 if [ "${NATIVE_GLIBC_MAX_VER}" == "" ];then
@@ -966,6 +978,16 @@ echo "--------------------------------------------------------------------------
 #
 chmod +500 ${SHELL_PATH}/kits/OpenVDB/build.sh
 ${SHELL_PATH}/kits/OpenVDB/build.sh
+exit_if_error $? "终止。" 1
+
+
+echo "----------------------------------------------------------------------------"
+echo "----------------------------------------------------------------------------"
+
+
+#
+chmod +500 ${SHELL_PATH}/kits/FILE/build.sh
+${SHELL_PATH}/kits/FILE/build.sh
 exit_if_error $? "终止。" 1
 
 

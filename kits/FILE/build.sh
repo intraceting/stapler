@@ -28,11 +28,20 @@ exit_if_error()
     fi
 }
 
+#执行配置。
+if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+    exit_if_error 1 "FILE不支持此平台。" 0
+elif [ "${TARGET_PLATFORM}" == "arm" ];then
+    exit_if_error 1 "FILE不支持此平台。" 0
+else
+    exit_if_error 0 "FILE不支持此平台。" 0
+fi
+
 #
 FILE_SRC_PATH=${SHELL_PATH}/file-FILE5_44/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/lib/libmagic.so ];then
+if [ ! -f ${TARGET_PERFIX_PATH}/lib/libmagic.a ];then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/file/
