@@ -32,11 +32,11 @@ exit_if_error()
 CIMG_SRC_PATH=${SHELL_PATH}/CImg-v.3.2.4/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/include/cimg/CImg.h ];then
+if [ ! -f ${TARGET_PREFIX_PATH}/include/cimg/CImg.h ];then
 {
     #创建安装目录。
-    mkdir -p ${TARGET_PERFIX_PATH}/include/cimg/
+    mkdir -p ${TARGET_PREFIX_PATH}/include/cimg/
     #不需要编译，直接复制源码到安装目录。
-    cp -rf ${CIMG_SRC_PATH}/CImg.h ${TARGET_PERFIX_PATH}/include/cimg/
+    cp -rf ${CIMG_SRC_PATH}/CImg.h ${TARGET_PREFIX_PATH}/include/cimg/
 }
 fi

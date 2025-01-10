@@ -32,7 +32,7 @@ exit_if_error()
 CAIRO_SRC_PATH=${SHELL_PATH}/cairo-1.16.0/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/lib/libcairo.a ] && [ ! -f ${TARGET_PERFIX_PATH}/lib/libcairo.so ] ;then
+if [ ! -f ${TARGET_PREFIX_PATH}/lib/libcairo.a ] && [ ! -f ${TARGET_PREFIX_PATH}/lib/libcairo.so ] ;then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/cairo/
@@ -64,16 +64,16 @@ if [ ! -f ${TARGET_PERFIX_PATH}/lib/libcairo.a ] && [ ! -f ${TARGET_PERFIX_PATH}
 
     #执行配置。
     ./configure ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PERFIX_PATH}/ \
+        --prefix=${TARGET_PREFIX_PATH}/ \
         CC=${TARGET_COMPILER_C} \
         AR=${TARGET_COMPILER_AR} \
         LD=${TARGET_COMPILER_LD} \
         CXX=${TARGET_COMPILER_CXX} \
-        "CFLAGS=-O3 -fPIC -I${TARGET_PERFIX_PATH}/include/" \
-        "LIBS=-L${TARGET_PERFIX_PATH}/lib/ -lz" \
-        "CXXFLAGS=-O3 -fPIC -I${TARGET_PERFIX_PATH}/include/" \
-        "pixman_CFLAGS=-I${TARGET_PERFIX_PATH}/include/pixman-1/" \
-        "pixman_LIBS=-L${TARGET_PERFIX_PATH}/lib/ -lpixman-1" \
+        "CFLAGS=-O3 -fPIC -I${TARGET_PREFIX_PATH}/include/" \
+        "LIBS=-L${TARGET_PREFIX_PATH}/lib/ -lz" \
+        "CXXFLAGS=-O3 -fPIC -I${TARGET_PREFIX_PATH}/include/" \
+        "pixman_CFLAGS=-I${TARGET_PREFIX_PATH}/include/pixman-1/" \
+        "pixman_LIBS=-L${TARGET_PREFIX_PATH}/lib/ -lpixman-1" \
         --enable-png=no \
         --enable-svg=no \
         --enable-test-surfaces=no \

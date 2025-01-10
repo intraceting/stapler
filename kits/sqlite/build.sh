@@ -32,7 +32,7 @@ exit_if_error()
 SQLITE_SRC_PATH=${SHELL_PATH}/sqlite-autoconf-3420000/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/lib/libsqlite3.a ] && [ ! -f ${TARGET_PERFIX_PATH}/lib/libsqlite3.so ] ;then
+if [ ! -f ${TARGET_PREFIX_PATH}/lib/libsqlite3.a ] && [ ! -f ${TARGET_PREFIX_PATH}/lib/libsqlite3.so ] ;then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/sqlite/
@@ -64,7 +64,7 @@ if [ ! -f ${TARGET_PERFIX_PATH}/lib/libsqlite3.a ] && [ ! -f ${TARGET_PERFIX_PAT
 
     #执行配置。
     ./configure ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PERFIX_PATH}/ \
+        --prefix=${TARGET_PREFIX_PATH}/ \
         CC=${TARGET_COMPILER_C} \
         AR=${TARGET_COMPILER_AR} \
         LD=${TARGET_COMPILER_LD} \

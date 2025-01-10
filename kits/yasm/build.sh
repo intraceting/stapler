@@ -32,7 +32,7 @@ exit_if_error()
 YASM_SRC_PATH=${SHELL_PATH}/yasm-1.3.0/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/lib/libyasm.a ];then
+if [ ! -f ${TARGET_PREFIX_PATH}/lib/libyasm.a ];then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/yasm/
@@ -65,7 +65,7 @@ if [ ! -f ${TARGET_PERFIX_PATH}/lib/libyasm.a ];then
 
     ./configure \
         ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PERFIX_PATH}/ \
+        --prefix=${TARGET_PREFIX_PATH}/ \
         CC=${TARGET_COMPILER_C} \
         CFLAGS="-O3 -fPIC" \
         CXX=${TARGET_COMPILER_CXX} \

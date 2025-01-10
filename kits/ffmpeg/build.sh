@@ -32,7 +32,7 @@ exit_if_error()
 FFMPEG_SRC_PATH=${SHELL_PATH}/ffmpeg-4.1/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/bin/ffmpeg ];then
+if [ ! -f ${TARGET_PREFIX_PATH}/bin/ffmpeg ];then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/ffmpeg/
@@ -64,12 +64,12 @@ if [ ! -f ${TARGET_PERFIX_PATH}/bin/ffmpeg ];then
     #执行配置。
     ./configure \
         ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PERFIX_PATH}/ \
+        --prefix=${TARGET_PREFIX_PATH}/ \
         --target-os=linux \
         --enable-cross-compile \
         --cross-prefix=${TARGET_COMPILER_PREFIX} \
-        --extra-cflags="-I${TARGET_PERFIX_PATH}/include" \
-        --extra-ldflags="-L${TARGET_PERFIX_PATH}/lib" \
+        --extra-cflags="-I${TARGET_PREFIX_PATH}/include" \
+        --extra-ldflags="-L${TARGET_PREFIX_PATH}/lib" \
         --extra-libs="-lpthread -lm -ldl" \
         --pkg-config="pkg-config" \
         --enable-gpl \

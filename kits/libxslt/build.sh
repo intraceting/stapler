@@ -32,7 +32,7 @@ exit_if_error()
 LIBXSLT_SRC_PATH=${SHELL_PATH}/libxslt-20240119/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/lib/libxslt.so ];then
+if [ ! -f ${TARGET_PREFIX_PATH}/lib/libxslt.so ];then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/libxslt/
@@ -45,7 +45,7 @@ if [ ! -f ${TARGET_PERFIX_PATH}/lib/libxslt.so ];then
     cd ${BUILD_TMP_PATH}/
 
     #指定交叉编译环境的目录
-    #set(CMAKE_FIND_ROOT_PATH ${TARGET_COMPILER_HOME})
+    #set(CMAKE_FIND_ROOT_PATH ${TARGET_COMPILER_SYSROOT})
     #从来不在指定目录(交叉编译)下查找工具程序。(编译时利用的是宿主的工具)
     #set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
     #只在指定目录(交叉编译)下查找库文件
@@ -56,18 +56,18 @@ if [ ! -f ${TARGET_PERFIX_PATH}/lib/libxslt.so ];then
     #set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
     #执行配置。
-    ${NATIVE_PERFIX_PATH}/bin/cmake ${LIBXSLT_SRC_PATH} \
-        -DCMAKE_PREFIX_PATH=${TARGET_PERFIX_PATH}/ \
-        -DCMAKE_INSTALL_PREFIX=${TARGET_PERFIX_PATH}/ \
+    ${NATIVE_PREFIX_PATH}/bin/cmake ${LIBXSLT_SRC_PATH} \
+        -DCMAKE_PREFIX_PATH=${TARGET_PREFIX_PATH}/ \
+        -DCMAKE_INSTALL_PREFIX=${TARGET_PREFIX_PATH}/ \
         -DCMAKE_C_COMPILER=${TARGET_COMPILER_C} \
         -DCMAKE_CXX_COMPILER=${TARGET_COMPILER_CXX} \
-        -DCMAKE_FIND_ROOT_PATH=${TARGET_PERFIX_PATH}/ \
+        -DCMAKE_FIND_ROOT_PATH=${TARGET_PREFIX_PATH}/ \
         -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
         -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
         -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
         -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY \
-        -DCMAKE_C_FLAGS="-O3 -L${TARGET_PERFIX_PATH}/lib -l:libz.so.1" \
-        -DCMAKE_CXX_FLAGS="-O3 -L${TARGET_PERFIX_PATH}/lib -l:libz.so.1" \
+        -DCMAKE_C_FLAGS="-O3 -L${TARGET_PREFIX_PATH}/lib -l:libz.so.1" \
+        -DCMAKE_CXX_FLAGS="-O3 -L${TARGET_PREFIX_PATH}/lib -l:libz.so.1" \
         -DCMAKE_BUILD_TYPE=Release \
         -DLIBXSLT_WITH_PYTHON=OFF \
         -DLIBXSLT_WITH_TESTS=OFF \

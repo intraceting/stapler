@@ -41,7 +41,7 @@ fi
 DHCP_SRC_PATH=${SHELL_PATH}/dhcp-4_4_3/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/sbin/dhclient ] ;then
+if [ ! -f ${TARGET_PREFIX_PATH}/sbin/dhclient ] ;then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/dhcp/
@@ -73,7 +73,7 @@ if [ ! -f ${TARGET_PERFIX_PATH}/sbin/dhclient ] ;then
 
     #执行配置。
     ./configure ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PERFIX_PATH}/ \
+        --prefix=${TARGET_PREFIX_PATH}/ \
         --with-randomdev=no \
         --disable-dhcpv6 \
         "--with-bind-extra-config=${TARGET_MAKEFILE_CONF}"\
@@ -81,8 +81,8 @@ if [ ! -f ${TARGET_PERFIX_PATH}/sbin/dhclient ] ;then
         CC=${TARGET_COMPILER_C} \
         AR=${TARGET_COMPILER_AR} \
         LD=${TARGET_COMPILER_LD} \
-        "CFLAGS=-O3 -fPIC -I${TARGET_PERFIX_PATH}/include/" \
-        "LDFLAGS=-L${TARGET_PERFIX_PATH}/lib/"
+        "CFLAGS=-O3 -fPIC -I${TARGET_PREFIX_PATH}/include/" \
+        "LDFLAGS=-L${TARGET_PREFIX_PATH}/lib/"
         
     exit_if_error $? "dhcp配置错误。" 1
 

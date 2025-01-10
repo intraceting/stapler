@@ -32,7 +32,7 @@ exit_if_error()
 PCRE2_SRC_PATH=${SHELL_PATH}/pcre2-pcre2-10.42/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/lib/libpcre2-8.a ];then
+if [ ! -f ${TARGET_PREFIX_PATH}/lib/libpcre2-8.a ];then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/pcre2/
@@ -64,7 +64,7 @@ if [ ! -f ${TARGET_PERFIX_PATH}/lib/libpcre2-8.a ];then
 
     #执行配置。
     ./configure ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PERFIX_PATH}/ \
+        --prefix=${TARGET_PREFIX_PATH}/ \
         CC=${TARGET_COMPILER_C} \
         CXX=${TARGET_COMPILER_CXX} \
         AR=${TARGET_COMPILER_AR} \

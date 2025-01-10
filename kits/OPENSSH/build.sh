@@ -32,7 +32,7 @@ exit_if_error()
 OPENSSH_SRC_PATH=${SHELL_PATH}/openssh-8.2p1/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/sbin/sshd ];then
+if [ ! -f ${TARGET_PREFIX_PATH}/sbin/sshd ];then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/openssh/
@@ -61,20 +61,20 @@ if [ ! -f ${TARGET_PERFIX_PATH}/sbin/sshd ];then
 
     #执行配置。
     ./configure ${TARGET_MAKEFILE_CONF} \
-        --prefix="${TARGET_PERFIX_PATH}/" \
+        --prefix="${TARGET_PREFIX_PATH}/" \
         CC="${TARGET_COMPILER_C}" \
         AR="${TARGET_COMPILER_AR}" \
         LD="${TARGET_COMPILER_LD}" \
         CFLAGS="-O3" \
         CXX="${TARGET_COMPILER_CXX}" \
         CXXFLAGS="-O3" \
-        --with-zlib="${TARGET_PERFIX_PATH}" \
+        --with-zlib="${TARGET_PREFIX_PATH}" \
         --without-zlib-version-check \
-        --with-ssl-dir="${TARGET_PERFIX_PATH}" \
+        --with-ssl-dir="${TARGET_PREFIX_PATH}" \
         --without-openssl-header-check \
         --disable-etc-default-login \
         --disable-strip \
-        --with-privsep-path="${TARGET_PERFIX_PATH}/var/empty"
+        --with-privsep-path="${TARGET_PREFIX_PATH}/var/empty"
     exit_if_error $? "openssh配置错误。" 1
 
     #编译。

@@ -28,20 +28,53 @@ exit_if_error()
 }
 
 #
-NATIVE_COMPILER_HOME=/usr/
-NATIVE_COMPILER_PREFIX=${NATIVE_COMPILER_HOME}/bin/
-NATIVE_COMPILER_C=
-NATIVE_COMPILER_CXX=
-NATIVE_COMPILER_AR=
-NATIVE_COMPILER_LD=
-NATIVE_COMPILER_RANLIB=
-NATIVE_COMPILER_READELF=
+which_status()
+{
+    which "${1}" 2>>/dev/null 1>>/dev/null
+    echo $?
+}
 
 #
-TARGET_COMPILER_HOME=
-TARGET_COMPILER_PREFIX=
+native_compiler_agent()
+{
+    if [ -f "${NATIVE_COMPILER_C}" ];then
+        ${NATIVE_COMPILER_C} $*
+    elif [ -f "${NATIVE_COMPILER_CXX}" ];then
+        ${NATIVE_COMPILER_CXX} $*
+    else 
+        exit 127
+    fi
+}
+
+#
+target_compiler_agent()
+{
+    if [ -f "${TARGET_COMPILER_C}" ];then
+        ${TARGET_COMPILER_C} $* 2>>/dev/null
+    elif [ -f "${TARGET_COMPILER_CXX}" ];then
+        ${TARGET_COMPILER_CXX} $* 2>>/dev/null
+    else 
+        exit 127
+    fi
+}
+
+#
+NATIVE_COMPILER_SYSROOT=
+NATIVE_COMPILER_PREFIX=/usr/bin/
+NATIVE_COMPILER_C=$(which gcc)
+NATIVE_COMPILER_CXX=$(which g++)
+NATIVE_COMPILER_FORTRAN=$(which gfortran)
+NATIVE_COMPILER_AR=$(which ar)
+NATIVE_COMPILER_LD=$(which ld)
+NATIVE_COMPILER_RANLIB=$(which ranlib)
+NATIVE_COMPILER_READELF=$(which readelf)
+
+#
+TARGET_COMPILER_SYSROOT=
+TARGET_COMPILER_PREFIX=/usr/bin/
 TARGET_COMPILER_C=
 TARGET_COMPILER_CXX=
+TARGET_COMPILER_FORTRAN=
 TARGET_COMPILER_AR=
 TARGET_COMPILER_LD=
 TARGET_COMPILER_RANLIB=
@@ -49,7 +82,7 @@ TARGET_COMPILER_READELF=
 
 #
 BUILD_PATH=${SHELL_PATH}/build/
-ROOTFS_PATH=${SHELL_PATH}/rootfs/
+RELEASE_PATH=${SHELL_PATH}/release/
 
 #
 PrintUsage()
@@ -62,30 +95,31 @@ usage: [ OPTIONS ]
     -e < name=value >
      自定义环境变量。
      
-     NATIVE_COMPILER_HOME=${NATIVE_COMPILER_HOME}
+     NATIVE_COMPILER_SYSROOT=${NATIVE_COMPILER_SYSROOT}
      NATIVE_COMPILER_PREFIX=${NATIVE_COMPILER_PREFIX}
-     NATIVE_COMPILER_C=\${NATIVE_COMPILER_PREFIX}gcc
-     NATIVE_COMPILER_CXX=\${NATIVE_COMPILER_PREFIX}g++
-     NATIVE_COMPILER_AR=\${NATIVE_COMPILER_PREFIX}ar
-     NATIVE_COMPILER_LD=\${NATIVE_COMPILER_PREFIX}ld
-     NATIVE_COMPILER_RANLIB=\${NATIVE_COMPILER_PREFIX}ranlib
-     NATIVE_COMPILER_READELF=\${NATIVE_COMPILER_PREFIX}readelf
+     NATIVE_COMPILER_C=${NATIVE_COMPILER_C}
+     NATIVE_COMPILER_CXX=${NATIVE_COMPILER_CXX}
+     NATIVE_COMPILER_FORTRAN=${NATIVE_COMPILER_FORTRAN}
+     NATIVE_COMPILER_AR=${NATIVE_COMPILER_AR}
+     NATIVE_COMPILER_LD=${NATIVE_COMPILER_LD}
+     NATIVE_COMPILER_RANLIB=${NATIVE_COMPILER_RANLIB}
+     NATIVE_COMPILER_READELF=${NATIVE_COMPILER_READELF}
 
-     TARGET_COMPILER_HOME=\${NATIVE_COMPILER_HOME}
-     TARGET_COMPILER_PREFIX=\${NATIVE_COMPILER_PREFIX}
-     TARGET_COMPILER_C=\${NATIVE_COMPILER_PREFIX}gcc
-     TARGET_COMPILER_CXX=\${NATIVE_COMPILER_PREFIX}g++
-     TARGET_COMPILER_AR=\${NATIVE_COMPILER_PREFIX}ar
-     TARGET_COMPILER_AR=\${NATIVE_COMPILER_PREFIX}ld
-     TARGET_COMPILER_RANLIB=\${NATIVE_COMPILER_PREFIX}ranlib
-     TARGET_COMPILER_READELF=\${NATIVE_COMPILER_PREFIX}readelf
-
+     TARGET_COMPILER_SYSROOT=${TARGET_COMPILER_SYSROOT}
+     TARGET_COMPILER_PREFIX=${TARGET_COMPILER_PREFIX}
+     TARGET_COMPILER_C=${TARGET_COMPILER_C}
+     TARGET_COMPILER_CXX=${TARGET_COMPILER_CXX}
+     TARGET_COMPILER_FORTRAN=${TARGET_COMPILER_FORTRAN}
+     TARGET_COMPILER_AR=${TARGET_COMPILER_AR}
+     TARGET_COMPILER_LD=${TARGET_COMPILER_LD}
+     TARGET_COMPILER_RANLIB=${TARGET_COMPILER_RANLIB}
+     TARGET_COMPILER_READELF=${TARGET_COMPILER_READELF}
 
     -b < path >
      构建目录。默认：${BUILD_PATH}
 
-    -p < path >
-     ROOTFS目录。默认：${ROOTFS_PATH}
+    -r < path >
+     发行目录。默认：${RELEASE_PATH}
 
 EOF
 }
@@ -113,197 +147,204 @@ do
     b)
         BUILD_PATH="${OPTARG}"
     ;;
+    r)
+        RELEASE_PATH="${OPTARG}"
+    ;;
     esac
 done
 
-#修复默认值。
-if [ "${NATIVE_COMPILER_HOME}" == "" ];then
-NATIVE_COMPILER_HOME=/usr/
-fi
-#修复默认值。
+#################################################################################
+
+#检查参数。
 if [ "${NATIVE_COMPILER_PREFIX}" == "" ];then
-NATIVE_COMPILER_PREFIX=${NATIVE_COMPILER_HOME}/bin/
+echo "NATIVE_COMPILER_PREFIX=${NATIVE_COMPILER_PREFIX} 无效或不存在."
+exit 22
 fi
+
 #修复默认值。
 if [ "${NATIVE_COMPILER_C}" == "" ];then
-NATIVE_COMPILER_C=${NATIVE_COMPILER_PREFIX}gcc
+NATIVE_COMPILER_C="${NATIVE_COMPILER_PREFIX}gcc"
 fi
 #修复默认值。
 if [ "${NATIVE_COMPILER_CXX}" == "" ];then
-NATIVE_COMPILER_CXX=${NATIVE_COMPILER_PREFIX}g++
+NATIVE_COMPILER_CXX="${NATIVE_COMPILER_PREFIX}g++"
+fi
+#修复默认值。
+if [ "${NATIVE_COMPILER_FORTRAN}" == "" ];then
+NATIVE_COMPILER_FORTRAN="${NATIVE_COMPILER_PREFIX}gfortran"
+fi
+#修复默认值。
+if [ "${NATIVE_COMPILER_SYSROOT}" == "" ];then
+NATIVE_COMPILER_SYSROOT=$(native_compiler_agent "--print-sysroot")
 fi
 #修复默认值。
 if [ "${NATIVE_COMPILER_AR}" == "" ];then
-NATIVE_COMPILER_AR=${NATIVE_COMPILER_PREFIX}ar
+NATIVE_COMPILER_AR=$(native_compiler_agent "-print-prog-name=ar")
+NATIVE_COMPILER_AR=$(which "${NATIVE_COMPILER_AR}")
 fi
 #修复默认值。
 if [ "${NATIVE_COMPILER_LD}" == "" ];then
-NATIVE_COMPILER_LD=${NATIVE_COMPILER_PREFIX}ld
+NATIVE_COMPILER_LD=$(native_compiler_agent "-print-prog-name=ld")
+NATIVE_COMPILER_LD=$(which "${NATIVE_COMPILER_LD}")
 fi
 #修复默认值。
 if [ "${NATIVE_COMPILER_RANLIB}" == "" ];then
-NATIVE_COMPILER_RANLIB=${NATIVE_COMPILER_PREFIX}ranlib
+NATIVE_COMPILER_RANLIB=$(native_compiler_agent "-print-prog-name=ranlib")
+NATIVE_COMPILER_RANLIB=$(which "${NATIVE_COMPILER_RANLIB}")
 fi
 #修复默认值。
 if [ "${NATIVE_COMPILER_READELF}" == "" ];then
-NATIVE_COMPILER_READELF=${NATIVE_COMPILER_PREFIX}readelf
+NATIVE_COMPILER_READELF=$(native_compiler_agent "-print-prog-name=readelf")
+NATIVE_COMPILER_READELF=$(which "${NATIVE_COMPILER_READELF}")
 fi
 
 #检查参数。
-if [ ! -d ${NATIVE_COMPILER_HOME} ];then
-echo "\'${NATIVE_COMPILER_HOME}\'不存在."
+if [ ! -f "${NATIVE_COMPILER_C}" ];then
+echo "NATIVE_COMPILER_C=${NATIVE_COMPILER_C} 无效或不存在."
 exit 22
 fi
 #检查参数。
-if [ ! -f ${NATIVE_COMPILER_C} ];then
-echo "\'${NATIVE_COMPILER_C}\'不存在."
+if [ ! -f "${NATIVE_COMPILER_CXX}" ];then
+echo "NATIVE_COMPILER_CXX=${NATIVE_COMPILER_CXX} 无效或不存在."
 exit 22
 fi
 #检查参数。
-if [ ! -f ${NATIVE_COMPILER_CXX} ];then
-echo "\'${NATIVE_COMPILER_CXX}\'不存在."
+if [ ! -f "${NATIVE_COMPILER_FORTRAN}" ];then
+echo "NATIVE_COMPILER_FORTRAN=${NATIVE_COMPILER_FORTRAN} 无效或不存在."
 exit 22
 fi
 #检查参数。
-if [ ! -f ${NATIVE_COMPILER_AR} ];then
-echo "\'${NATIVE_COMPILER_AR}\'不存在."
+if [ ! -f "${NATIVE_COMPILER_AR}" ];then
+echo "NATIVE_COMPILER_AR=${NATIVE_COMPILER_AR} 无效或不存在."
 exit 22
 fi
 #检查参数。
-if [ ! -f ${NATIVE_COMPILER_LD} ];then
-echo "\'${NATIVE_COMPILER_LD}\'不存在."
+if [ ! -f "${NATIVE_COMPILER_LD}" ];then
+echo "NATIVE_COMPILER_LD=${NATIVE_COMPILER_LD} 无效或不存在."
 exit 22
 fi
 #检查参数。
-if [ ! -f ${NATIVE_COMPILER_RANLIB} ];then
-echo "\'${NATIVE_COMPILER_RANLIB}\'不存在."
+if [ ! -f "${NATIVE_COMPILER_RANLIB}" ];then
+echo "NATIVE_COMPILER_RANLIB=${NATIVE_COMPILER_RANLIB} 无效或不存在."
 exit 22
 fi
 #检查参数。
-if [ ! -f ${NATIVE_COMPILER_READELF} ];then
-echo "\'${NATIVE_COMPILER_READELF}\'不存在."
+if [ ! -f "${NATIVE_COMPILER_READELF}" ];then
+echo "NATIVE_COMPILER_READELF=${NATIVE_COMPILER_READELF} 无效或不存在."
 exit 22
 fi
 
-#
-export NATIVE_COMPILER_HOME
-export NATIVE_COMPILER_PREFIX
-export NATIVE_COMPILER_C
-export NATIVE_COMPILER_CXX
-export NATIVE_COMPILER_AR
-export NATIVE_COMPILER_LD
-export NATIVE_COMPILER_RANLIB
-export NATIVE_COMPILER_READELF
 
+#################################################################################
 
-
-#修复默认值。
-if [ "${TARGET_COMPILER_HOME}" == "" ];then
-TARGET_COMPILER_HOME=${NATIVE_COMPILER_HOME}
-fi
-#修复默认值。
+#检查参数。
 if [ "${TARGET_COMPILER_PREFIX}" == "" ];then
-TARGET_COMPILER_PREFIX=${NATIVE_COMPILER_PREFIX}
+echo "TARGET_COMPILER_PREFIX=${TARGET_COMPILER_PREFIX} 无效或不存在."
+exit 22
 fi
+
 #修复默认值。
 if [ "${TARGET_COMPILER_C}" == "" ];then
-TARGET_COMPILER_C=${TARGET_COMPILER_PREFIX}gcc
+TARGET_COMPILER_C="${TARGET_COMPILER_PREFIX}gcc"
 fi
 #修复默认值。
 if [ "${TARGET_COMPILER_CXX}" == "" ];then
-TARGET_COMPILER_CXX=${TARGET_COMPILER_PREFIX}g++
+TARGET_COMPILER_CXX="${TARGET_COMPILER_PREFIX}g++"
+fi
+#修复默认值。
+if [ "${TARGET_COMPILER_FORTRAN}" == "" ];then
+TARGET_COMPILER_FORTRAN="${TARGET_COMPILER_PREFIX}gfortran"
+fi
+#修复默认值。
+if [ "${TARGET_COMPILER_SYSROOT}" == "" ];then
+TARGET_COMPILER_SYSROOT=$(target_compiler_agent "--print-sysroot")
 fi
 #修复默认值。
 if [ "${TARGET_COMPILER_AR}" == "" ];then
-TARGET_COMPILER_AR=${TARGET_COMPILER_PREFIX}ar
+TARGET_COMPILER_AR=$(target_compiler_agent "-print-prog-name=ar")
+TARGET_COMPILER_AR=$(which "${TARGET_COMPILER_AR}")
 fi
 #修复默认值。
 if [ "${TARGET_COMPILER_LD}" == "" ];then
-TARGET_COMPILER_LD=${TARGET_COMPILER_PREFIX}ld
+TARGET_COMPILER_LD=$(target_compiler_agent "-print-prog-name=ld")
+TARGET_COMPILER_LD=$(which "${TARGET_COMPILER_LD}")
 fi
 #修复默认值。
 if [ "${TARGET_COMPILER_RANLIB}" == "" ];then
-TARGET_COMPILER_RANLIB=${TARGET_COMPILER_PREFIX}ranlib
+TARGET_COMPILER_RANLIB=$(target_compiler_agent "-print-prog-name=ranlib")
+TARGET_COMPILER_RANLIB=$(which "${TARGET_COMPILER_RANLIB}")
 fi
 #修复默认值。
 if [ "${TARGET_COMPILER_READELF}" == "" ];then
-TARGET_COMPILER_READELF=${TARGET_COMPILER_PREFIX}readelf
+TARGET_COMPILER_READELF=$(target_compiler_agent "-print-prog-name=readelf")
+TARGET_COMPILER_READELF=$(which "${TARGET_COMPILER_READELF}")
 fi
 
 #检查参数。
-if [ ! -d ${TARGET_COMPILER_HOME} ];then
-echo "\'${TARGET_COMPILER_HOME}\'不存在."
+if [ ! -f "${TARGET_COMPILER_C}" ];then
+echo "TARGET_COMPILER_C=${TARGET_COMPILER_C} 无效或不存在."
 exit 22
 fi
 #检查参数。
-if [ ! -f ${TARGET_COMPILER_C} ];then
-echo "\'${TARGET_COMPILER_C}\'不存在."
+if [ ! -f "${TARGET_COMPILER_CXX}" ];then
+echo "TARGET_COMPILER_CXX=${TARGET_COMPILER_CXX} 无效或不存在."
 exit 22
 fi
 #检查参数。
-if [ ! -f ${NATIVE_COMPILER_CXX} ];then
-echo "\'${NATIVE_COMPILER_CXX}\'不存在."
+if [ ! -f "${TARGET_COMPILER_FORTRAN}" ];then
+echo "TARGET_COMPILER_FORTRAN=${TARGET_COMPILER_FORTRAN} 无效或不存在."
 exit 22
 fi
 #检查参数。
-if [ ! -f ${TARGET_COMPILER_AR} ];then
-echo "\'${TARGET_COMPILER_AR}\'不存在."
+if [ ! -f "${TARGET_COMPILER_AR}" ];then
+echo "TARGET_COMPILER_AR=${TARGET_COMPILER_AR} 无效或不存在."
 exit 22
 fi
 #检查参数。
-if [ ! -f ${TARGET_COMPILER_LD} ];then
-echo "\'${TARGET_COMPILER_LD}\'不存在."
+if [ ! -f "${TARGET_COMPILER_LD}" ];then
+echo "TARGET_COMPILER_LD=${TARGET_COMPILER_LD} 无效或不存在."
 exit 22
 fi
 #检查参数。
-if [ ! -f ${TARGET_COMPILER_RANLIB} ];then
-echo "\'${TARGET_COMPILER_RANLIB}\'不存在."
+if [ ! -f "${TARGET_COMPILER_RANLIB}" ];then
+echo "TARGET_COMPILER_RANLIB=${TARGET_COMPILER_RANLIB} 无效或不存在."
 exit 22
 fi
 #检查参数。
-if [ ! -f ${TARGET_COMPILER_READELF} ];then
-echo "\'${TARGET_COMPILER_READELF}\'不存在."
+if [ ! -f "${TARGET_COMPILER_READELF}" ];then
+echo "TARGET_COMPILER_READELF=${TARGET_COMPILER_READELF} 无效或不存在."
 exit 22
 fi
 
-#
-export TARGET_COMPILER_HOME
-export TARGET_COMPILER_PREFIX
-export TARGET_COMPILER_C
-export TARGET_COMPILER_CXX
-export TARGET_COMPILER_AR
-export TARGET_COMPILER_LD
-export TARGET_COMPILER_RANLIB
-export TARGET_COMPILER_READELF
+#################################################################################
 
 #修复默认值。
 if [ "${BUILD_PATH}" == "" ];then
 BUILD_PATH=${SHELL_PATH}/build/
 fi
 
-#修复默认值。
-export BUILD_PATH
+#编译过程中临时文件存放的目录。
+TMPDIR=${BUILD_PATH}/
+
 
 #修复默认值。
-if [ "${ROOTFS_PATH}" == "" ];then
-ROOTFS_PATH=${SHELL_PATH}/rootfs/
+if [ "${RELEASE_PATH}" == "" ];then
+RELEASE_PATH=${SHELL_PATH}/release/
 fi
 
-
-#编译过程中临时文件目录。
-export TMPDIR=${BUILD_PATH}/
+#################################################################################
 
 #
-export NATIVE_MACHINE=$(${NATIVE_COMPILER_C} -dumpmachine 2>/dev/null)
-export TARGET_MACHINE=$(${TARGET_COMPILER_C} -dumpmachine 2>/dev/null)
+NATIVE_MACHINE=$(${NATIVE_COMPILER_C} -dumpmachine 2>/dev/null)
+TARGET_MACHINE=$(${TARGET_COMPILER_C} -dumpmachine 2>/dev/null)
 
 #
-export NATIVE_PLATFORM=$(echo ${NATIVE_MACHINE} | cut -d - -f 1)
-export TARGET_PLATFORM=$(echo ${TARGET_MACHINE} | cut -d - -f 1)
+NATIVE_PLATFORM=$(echo ${NATIVE_MACHINE} | cut -d - -f 1)
+TARGET_PLATFORM=$(echo ${TARGET_MACHINE} | cut -d - -f 1)
 
 #
-export NATIVE_COMPILER_VERSION=$(${NATIVE_COMPILER_C} -dumpversion 2>/dev/null)
-export TARGET_COMPILER_VERSION=$(${TARGET_COMPILER_C} -dumpversion 2>/dev/null)
+NATIVE_COMPILER_VERSION=$(${NATIVE_COMPILER_C} -dumpversion 2>/dev/null)
+TARGET_COMPILER_VERSION=$(${TARGET_COMPILER_C} -dumpversion 2>/dev/null)
 
 
 #提取本机平台的glibc最大版本。
@@ -317,10 +358,12 @@ if [ "${NATIVE_PLATFORM}" == "${TARGET_PLATFORM}" ];then
 }
 else
 {
-    #查找目标平台的libc.so文件路径。
-    TARGET_GLIBC_SO_FILE=$(find ${TARGET_COMPILER_HOME} -name libc.so.6 |grep ${TARGET_MACHINE} |head -n 1)
     #提取目标平台的glibc最大版本。
-    TARGET_GLIBC_MAX_VER=$(${TARGET_COMPILER_READELF} -V ${TARGET_GLIBC_SO_FILE} | grep -o 'GLIBC_[0-9]\+\.[0-9]\+' | sort -u -V -r |head -n 1 |cut -d '_' -f 2)
+    if [ -f ${TARGET_COMPILER_SYSROOT}/lib64/libc.so.6 ];then
+        TARGET_GLIBC_MAX_VER=$(${TARGET_COMPILER_READELF} -V ${TARGET_COMPILER_SYSROOT}/lib64/libc.so.6 | grep -o 'GLIBC_[0-9]\+\.[0-9]\+' | sort -u -V -r |head -n 1 |cut -d '_' -f 2)
+    elif [ -f ${TARGET_COMPILER_SYSROOT}/lib/libc.so.6 ];then
+        TARGET_GLIBC_MAX_VER=$(${TARGET_COMPILER_READELF} -V ${TARGET_COMPILER_SYSROOT}/lib/libc.so.6 | grep -o 'GLIBC_[0-9]\+\.[0-9]\+' | sort -u -V -r |head -n 1 |cut -d '_' -f 2)
+    fi
 }
 fi
 
@@ -338,24 +381,103 @@ fi
 
 
 #
-export NATIVE_PERFIX_PATH=${ROOTFS_PATH}/${NATIVE_MACHINE}/glibc-${NATIVE_GLIBC_MAX_VER}/
-export TARGET_PERFIX_PATH=${ROOTFS_PATH}/${TARGET_MACHINE}/glibc-${TARGET_GLIBC_MAX_VER}/
+NATIVE_PREFIX_PATH=${RELEASE_PATH}/${NATIVE_MACHINE}/glibc-${NATIVE_GLIBC_MAX_VER}/
+TARGET_PREFIX_PATH=${RELEASE_PATH}/${TARGET_MACHINE}/glibc-${TARGET_GLIBC_MAX_VER}/
 
 
 #限制目标平台.pc文件搜索路径范围。
-export PKG_CONFIG_LIBDIR=${TARGET_PERFIX_PATH}/lib/pkgconfig
-#export PKG_CONFIG_PATH=${TARGET_PERFIX_PATH}/lib/pkgconfig:${PKG_CONFIG_PATH}
+PKG_CONFIG_LIBDIR=${TARGET_PREFIX_PATH}/lib/pkgconfig
+#PKG_CONFIG_PATH=${TARGET_PREFIX_PATH}/lib/pkgconfig:${PKG_CONFIG_PATH}
 
 #如果是本地编译，添加编译输出目录(lib)为动态库的搜索路径，因为有的工具包在编译和安装的过程中会进行本地验证。
 if [ "${NATIVE_PLATFORM}" == "${TARGET_PLATFORM}" ];then
-export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TARGET_PERFIX_PATH}/lib
+LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TARGET_PREFIX_PATH}/lib
 fi
 
+#################################################################################
 
 #生成不存在的路径。
-mkdir -p ${NATIVE_PERFIX_PATH}/
-mkdir -p ${TARGET_PERFIX_PATH}/
+mkdir -p ${NATIVE_PREFIX_PATH}/
+mkdir -p ${TARGET_PREFIX_PATH}/
 mkdir -p ${BUILD_PATH}/
+
+#导出变量。
+echo "NATIVE_COMPILER_SYSROOT=${NATIVE_COMPILER_SYSROOT}"
+export NATIVE_COMPILER_SYSROOT
+echo "NATIVE_COMPILER_PREFIX=${NATIVE_COMPILER_PREFIX}"
+export NATIVE_COMPILER_PREFIX
+echo "NATIVE_COMPILER_C=${NATIVE_COMPILER_C}"
+export NATIVE_COMPILER_C
+echo "NATIVE_COMPILER_CXX=${NATIVE_COMPILER_CXX}"
+export NATIVE_COMPILER_CXX
+echo "NATIVE_COMPILER_FORTRAN=${NATIVE_COMPILER_FORTRAN}"
+export NATIVE_COMPILER_FORTRAN
+echo "NATIVE_COMPILER_AR=${NATIVE_COMPILER_AR}"
+export NATIVE_COMPILER_AR
+echo "NATIVE_COMPILER_LD=${NATIVE_COMPILER_LD}"
+export NATIVE_COMPILER_LD
+echo "NATIVE_COMPILER_RANLIB=${NATIVE_COMPILER_RANLIB}"
+export NATIVE_COMPILER_RANLIB
+echo "NATIVE_COMPILER_READELF=${NATIVE_COMPILER_READELF}"
+export NATIVE_COMPILER_READELF
+#导出变量。
+echo "TARGET_COMPILER_SYSROOT=${TARGET_COMPILER_SYSROOT}"
+export TARGET_COMPILER_SYSROOT
+echo "TARGET_COMPILER_PREFIX=${TARGET_COMPILER_PREFIX}"
+export TARGET_COMPILER_PREFIX
+echo "TARGET_COMPILER_C=${TARGET_COMPILER_C}"
+export TARGET_COMPILER_C
+echo "TARGET_COMPILER_CXX=${TARGET_COMPILER_CXX}"
+export TARGET_COMPILER_CXX
+echo "TARGET_COMPILER_FORTRAN=${TARGET_COMPILER_FORTRAN}"
+export TARGET_COMPILER_FORTRAN
+echo "TARGET_COMPILER_AR=${TARGET_COMPILER_AR}"
+export TARGET_COMPILER_AR
+echo "TARGET_COMPILER_LD=${TARGET_COMPILER_LD}"
+export TARGET_COMPILER_LD
+echo "TARGET_COMPILER_RANLIB=${TARGET_COMPILER_RANLIB}"
+export TARGET_COMPILER_RANLIB
+echo "TARGET_COMPILER_READELF=${TARGET_COMPILER_READELF}"
+export TARGET_COMPILER_READELF
+#导出变量。
+echo "BUILD_PATH=${BUILD_PATH}"
+export BUILD_PATH
+echo "TMPDIR=${TMPDIR}"
+export TMPDIR
+#导出变量。
+echo "NATIVE_MACHINE=${NATIVE_MACHINE}"
+export NATIVE_MACHINE
+echo "TARGET_MACHINE=${TARGET_MACHINE}"
+export TARGET_MACHINE
+echo "NATIVE_PLATFORM=${NATIVE_PLATFORM}"
+export NATIVE_PLATFORM
+echo "TARGET_PLATFORM=${TARGET_PLATFORM}"
+export TARGET_PLATFORM
+echo "NATIVE_COMPILER_VERSION=${NATIVE_COMPILER_VERSION}"
+export NATIVE_COMPILER_VERSION
+echo "TARGET_COMPILER_VERSION=${TARGET_COMPILER_VERSION}"
+export TARGET_COMPILER_VERSION
+echo "NATIVE_PREFIX_PATH=${NATIVE_PREFIX_PATH}"
+export NATIVE_PREFIX_PATH
+echo "TARGET_PREFIX_PATH=${TARGET_PREFIX_PATH}"
+export TARGET_PREFIX_PATH
+#导出变量。
+echo "PKG_CONFIG_LIBDIR=${PKG_CONFIG_LIBDIR}"
+export PKG_CONFIG_LIBDIR
+echo "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}"
+export LD_LIBRARY_PATH
+
+
+#等待确认。
+while true; do
+    read -p "请输入 'yes' 继续: " input
+    if [ "$input" = "yes" ]; then
+        echo "输入正确，继续执行..."
+        break
+    else
+        echo "输入无效，请重试。"
+    fi
+done
 
 #指定交叉编译环境的目录
 #set(CMAKE_FIND_ROOT_PATH ${TARGET_COMPILER_HOME})

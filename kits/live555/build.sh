@@ -32,7 +32,7 @@ exit_if_error()
 LIVE555_SRC_PATH=${SHELL_PATH}/live_2023-06-20/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/lib/libliveMedia.a ];then
+if [ ! -f ${TARGET_PREFIX_PATH}/lib/libliveMedia.a ];then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/live/
@@ -49,10 +49,10 @@ if [ ! -f ${TARGET_PERFIX_PATH}/lib/libliveMedia.a ];then
 
     #创建个性化配置文件
 cat > config.private <<EOF
-PREFIX = ${TARGET_PERFIX_PATH}/
+PREFIX = ${TARGET_PREFIX_PATH}/
 LIBDIR = \$(PREFIX)/lib
 #-DNO_STD_LIB 用于c++20以下。
-COMPILE_OPTS = \$(INCLUDES) -I. -O3 -DSOCKLEN_T=socklen_t -D_LARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -std=c++11 -DNO_STD_LIB -Wno-deprecated -I${TARGET_PERFIX_PATH}/include/
+COMPILE_OPTS = \$(INCLUDES) -I. -O3 -DSOCKLEN_T=socklen_t -D_LARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 -std=c++11 -DNO_STD_LIB -Wno-deprecated -I${TARGET_PREFIX_PATH}/include/
 C = c
 C_COMPILER = ${TARGET_COMPILER_C}
 C_FLAGS = \$(COMPILE_OPTS) \$(CPPFLAGS) \$(CFLAGS) 
@@ -61,7 +61,7 @@ CPLUSPLUS_COMPILER = ${TARGET_COMPILER_CXX}
 CPLUSPLUS_FLAGS = \$(COMPILE_OPTS) -Wall -DBSD=1 \$(CPPFLAGS) \$(CXXFLAGS)
 OBJ = o
 LINK = ${TARGET_COMPILER_CXX} -o
-LINK_OPTS =	-L. \$(LDFLAGS) -L${TARGET_PERFIX_PATH}/lib/
+LINK_OPTS =	-L. \$(LDFLAGS) -L${TARGET_PREFIX_PATH}/lib/
 CONSOLE_LINK_OPTS =	\$(LINK_OPTS)
 LIBRARY_LINK = ${TARGET_COMPILER_AR} cr 
 LIBRARY_LINK_OPTS =	

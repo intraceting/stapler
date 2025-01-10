@@ -45,7 +45,7 @@ OPENSSL_SRC_PATH=${SHELL_PATH}/../openssl/openssl-1.1.1s/
 ZLIB_SRC_PATH=${SHELL_PATH}/../zlib/zlib-1.2.13/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/sbin/nginx ];then
+if [ ! -f ${TARGET_PREFIX_PATH}/sbin/nginx ];then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/nginx/
@@ -83,7 +83,7 @@ if [ ! -f ${TARGET_PERFIX_PATH}/sbin/nginx ];then
      #   --with-zlib=${BUILD_ZLIB_TMP_PATH}/ \
     #执行配置。
     ./configure \
-        --prefix=${TARGET_PERFIX_PATH}/ \
+        --prefix=${TARGET_PREFIX_PATH}/ \
         --user=root --group=root \
         --sbin-path=/usr/local/nginx/sbin/nginx \
         --conf-path=/usr/local/nginx/conf/nginx.conf \

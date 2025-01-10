@@ -32,11 +32,11 @@ exit_if_error()
 STB_SRC_PATH=${SHELL_PATH}/stb/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/include/stb/stb_include.h ];then
+if [ ! -f ${TARGET_PREFIX_PATH}/include/stb/stb_include.h ];then
 {
     #创建安装目录。
-    mkdir -p ${TARGET_PERFIX_PATH}/include/stb
+    mkdir -p ${TARGET_PREFIX_PATH}/include/stb
     #不需要编译，直接复制源码到安装目录。
-    cp -rf ${STB_SRC_PATH}/*.h ${TARGET_PERFIX_PATH}/include/stb/
+    cp -rf ${STB_SRC_PATH}/*.h ${TARGET_PREFIX_PATH}/include/stb/
 }
 fi

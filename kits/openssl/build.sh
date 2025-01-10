@@ -32,7 +32,7 @@ exit_if_error()
 OPENSSL_SRC_PATH=${SHELL_PATH}/openssl-1.1.1s/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/lib/libssl.so ];then
+if [ ! -f ${TARGET_PREFIX_PATH}/lib/libssl.so ];then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/openssl/
@@ -48,11 +48,11 @@ if [ ! -f ${TARGET_PERFIX_PATH}/lib/libssl.so ];then
 
     #执行配置。
     if [ "${TARGET_PLATFORM}" == "aarch64" ];then
-        ${OPENSSL_SRC_PATH}/Configure --prefix=${TARGET_PERFIX_PATH}/ --cross-compile-prefix=${TARGET_COMPILER_PREFIX} linux-aarch64 
+        ${OPENSSL_SRC_PATH}/Configure --prefix=${TARGET_PREFIX_PATH}/ --cross-compile-prefix=${TARGET_COMPILER_PREFIX} linux-aarch64 
     elif [ "${TARGET_PLATFORM}" == "arm" ] ;then
-        ${OPENSSL_SRC_PATH}/Configure --prefix=${TARGET_PERFIX_PATH}/ --cross-compile-prefix=${TARGET_COMPILER_PREFIX} linux-armv4
+        ${OPENSSL_SRC_PATH}/Configure --prefix=${TARGET_PREFIX_PATH}/ --cross-compile-prefix=${TARGET_COMPILER_PREFIX} linux-armv4
     else
-        ${OPENSSL_SRC_PATH}/Configure --prefix=${TARGET_PERFIX_PATH}/ --cross-compile-prefix=${TARGET_COMPILER_PREFIX} linux-x86_64
+        ${OPENSSL_SRC_PATH}/Configure --prefix=${TARGET_PREFIX_PATH}/ --cross-compile-prefix=${TARGET_COMPILER_PREFIX} linux-x86_64
     fi
     exit_if_error $? "openssl配置错误。" 1
 

@@ -41,7 +41,7 @@ fi
 PYTHON_SRC_PATH=${SHELL_PATH}/Python-3.11.5/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/bin/python3.11 ] ;then
+if [ ! -f ${TARGET_PREFIX_PATH}/bin/python3.11 ] ;then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/python/
@@ -68,7 +68,7 @@ if [ ! -f ${TARGET_PERFIX_PATH}/bin/python3.11 ] ;then
     fi
 
     #执行配置。
-    ./configure --prefix=${TARGET_PERFIX_PATH}/ --enable-optimizations --with-build-python=python ${TARGET_MAKEFILE_CONF} CC=${TARGET_COMPILER_C} 
+    ./configure --prefix=${TARGET_PREFIX_PATH}/ --enable-optimizations --with-build-python=python ${TARGET_MAKEFILE_CONF} CC=${TARGET_COMPILER_C} 
     exit_if_error $? "python配置错误。" 1
 
     #编译。

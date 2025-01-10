@@ -32,7 +32,7 @@ exit_if_error()
 FASTCGI_SRC_PATH=${SHELL_PATH}/fcgi2-2.4.2/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/lib/libfcgi.a ];then
+if [ ! -f ${TARGET_PREFIX_PATH}/lib/libfcgi.a ];then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/fastcgi/
@@ -56,11 +56,11 @@ if [ ! -f ${TARGET_PERFIX_PATH}/lib/libfcgi.a ];then
 
     #执行配置。
     if [ "${TARGET_PLATFORM}" == "aarch64" ];then
-        ./configure --prefix=${TARGET_PERFIX_PATH}/ --host=arm CC=${TARGET_COMPILER_C} CFLAGS="-O3 -DEOF=-1 -fPIC" CXX=${TARGET_COMPILER_CXX} CXXFLAGS="-O3 -DEOF=-1 -fPIC"
+        ./configure --prefix=${TARGET_PREFIX_PATH}/ --host=arm CC=${TARGET_COMPILER_C} CFLAGS="-O3 -DEOF=-1 -fPIC" CXX=${TARGET_COMPILER_CXX} CXXFLAGS="-O3 -DEOF=-1 -fPIC"
     elif [ "${TARGET_PLATFORM}" == "arm" ] ;then
-        ./configure --prefix=${TARGET_PERFIX_PATH}/ --host=arm CC=${TARGET_COMPILER_C} CFLAGS="-O3 -DEOF=-1 -fPIC"  CXX=${TARGET_COMPILER_CXX} CXXFLAGS="-O3 -DEOF=-1 -fPIC"
+        ./configure --prefix=${TARGET_PREFIX_PATH}/ --host=arm CC=${TARGET_COMPILER_C} CFLAGS="-O3 -DEOF=-1 -fPIC"  CXX=${TARGET_COMPILER_CXX} CXXFLAGS="-O3 -DEOF=-1 -fPIC"
     else
-        ./configure --prefix=${TARGET_PERFIX_PATH}/ --host=x86_64 CFLAGS="-O3 -DEOF=-1 -fPIC" CXXFLAGS="-O3 -DEOF=-1 -fPIC"
+        ./configure --prefix=${TARGET_PREFIX_PATH}/ --host=x86_64 CFLAGS="-O3 -DEOF=-1 -fPIC" CXXFLAGS="-O3 -DEOF=-1 -fPIC"
     fi
 
 

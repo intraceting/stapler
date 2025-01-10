@@ -55,7 +55,7 @@ fi
 OPENVDB_SRC_PATH=${SHELL_PATH}/openvdb-11.0.0/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/lib/libopenvdb.so ];then
+if [ ! -f ${TARGET_PREFIX_PATH}/lib/libopenvdb.so ];then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/openvdb/
@@ -83,30 +83,30 @@ if [ ! -f ${TARGET_PERFIX_PATH}/lib/libopenvdb.so ];then
     #        
 
     #执行配置。
-    ${NATIVE_PERFIX_PATH}/bin/cmake ${BUILD_TMP_PATH}/ \
+    ${NATIVE_PREFIX_PATH}/bin/cmake ${BUILD_TMP_PATH}/ \
         ${TARGET_MAKEFILE_CONF} \
         -G "Unix Makefiles" \
-        -DCMAKE_PREFIX_PATH=${TARGET_PERFIX_PATH}/ \
-        -DCMAKE_INSTALL_PREFIX=${TARGET_PERFIX_PATH}/ \
+        -DCMAKE_PREFIX_PATH=${TARGET_PREFIX_PATH}/ \
+        -DCMAKE_INSTALL_PREFIX=${TARGET_PREFIX_PATH}/ \
         -DCMAKE_C_COMPILER=${TARGET_COMPILER_C} \
         -DCMAKE_CXX_COMPILER=${TARGET_COMPILER_CXX} \
         -DCMAKE_LINKER=${TARGET_COMPILER_LD} \
         -DCMAKE_AR=${TARGET_COMPILER_AR} \
-        -DCMAKE_FIND_ROOT_PATH=${TARGET_PERFIX_PATH}/ \
+        -DCMAKE_FIND_ROOT_PATH=${TARGET_PREFIX_PATH}/ \
         -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
         -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
         -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
         -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY \
         -DCMAKE_C_FLAGS="-O3 -fPIC" \
         -DCMAKE_CXX_FLAGS="-O3 -fPIC" \
-        -DCMAKE_EXE_LINKER_FLAGS="-L${TARGET_PERFIX_PATH}/lib -llz4" \
+        -DCMAKE_EXE_LINKER_FLAGS="-L${TARGET_PREFIX_PATH}/lib -llz4" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_CXX_STANDARD=17 \
         -DDISABLE_DEPENDENCY_VERSION_CHECKS=ON 
     exit_if_error $? "OpenVDB配置错误。" 1
 
     #编译。
-    make -s -j2
+    make -s -j4
     exit_if_error $? "OpenVDB编译错误。" 1
 
      #安装。

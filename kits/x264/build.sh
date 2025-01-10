@@ -32,7 +32,7 @@ exit_if_error()
 X264_SRC_PATH=${SHELL_PATH}/x264-stable-2022/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/lib/libx264.a ];then
+if [ ! -f ${TARGET_PREFIX_PATH}/lib/libx264.a ];then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/x264/
@@ -68,7 +68,7 @@ if [ ! -f ${TARGET_PERFIX_PATH}/lib/libx264.a ];then
     #执行配置。
     ./configure \
         ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PERFIX_PATH}/ \
+        --prefix=${TARGET_PREFIX_PATH}/ \
         --cross-prefix=${TARGET_COMPILER_PREFIX} \
         --extra-cflags="-O3 -fPIC" \
         --enable-pic \

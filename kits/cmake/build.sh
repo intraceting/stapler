@@ -32,7 +32,7 @@ exit_if_error()
 CMAKE_SRC_PATH=${SHELL_PATH}/cmake-3.26.4/
 
 #检查是否已经创建。
-if [ ! -f ${NATIVE_PERFIX_PATH}/bin/cmake ];then
+if [ ! -f ${NATIVE_PREFIX_PATH}/bin/cmake ];then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/cmake/
@@ -51,7 +51,7 @@ if [ ! -f ${NATIVE_PERFIX_PATH}/bin/cmake ];then
     chmod +0500 configure
 
     #执行配置。
-    ./bootstrap --prefix=${NATIVE_PERFIX_PATH}/ --parallel=6 CC=${NATIVE_COMPILER_C} CXX=${NATIVE_COMPILER_CXX} --no-qt-gui
+    ./bootstrap --prefix=${NATIVE_PREFIX_PATH}/ --parallel=6 CC=${NATIVE_COMPILER_C} CXX=${NATIVE_COMPILER_CXX} --no-qt-gui
     exit_if_error $? "cmake配置错误。" 1
 
     #编译。

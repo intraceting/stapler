@@ -32,7 +32,7 @@ exit_if_error()
 SRS_SRC_PATH=${SHELL_PATH}/srs-6.0.48/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/objs/srs ] ;then
+if [ ! -f ${TARGET_PREFIX_PATH}/objs/srs ] ;then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/srs/
@@ -60,7 +60,7 @@ if [ ! -f ${TARGET_PERFIX_PATH}/objs/srs ] ;then
 
     #执行配置。
     ./configure ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PERFIX_PATH}/ \
+        --prefix=${TARGET_PREFIX_PATH}/ \
         --host=${TARGET_MACHINE} \
         --cross-prefix=${TARGET_COMPILER_PREFIX} \
         --cc=${TARGET_COMPILER_C} \
@@ -68,7 +68,7 @@ if [ ! -f ${TARGET_PERFIX_PATH}/objs/srs ] ;then
         --ar=${TARGET_COMPILER_AR} \
         --ld=${TARGET_COMPILER_LD} \
         --randlib=${TARGET_COMPILER_PREFIX}randlib \
-        --extra-flags="-L${TARGET_PERFIX_PATH}/lib/ -I${TARGET_PERFIX_PATH}/include/" \
+        --extra-flags="-L${TARGET_PREFIX_PATH}/lib/ -I${TARGET_PREFIX_PATH}/include/" \
         --jobs=6 \
         --srt=off \
         --rtc=off \

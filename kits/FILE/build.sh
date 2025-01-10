@@ -41,7 +41,7 @@ fi
 FILE_SRC_PATH=${SHELL_PATH}/file-FILE5_44/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/lib/libmagic.a ];then
+if [ ! -f ${TARGET_PREFIX_PATH}/lib/libmagic.a ];then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/file/
@@ -67,7 +67,7 @@ if [ ! -f ${TARGET_PERFIX_PATH}/lib/libmagic.a ];then
     fi
 
     #追加公共配置。
-    TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} --prefix=${TARGET_PERFIX_PATH}/"
+    TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} --prefix=${TARGET_PREFIX_PATH}/"
     TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} --disable-libtool-lock"
     TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} CC=${TARGET_COMPILER_C}"
     TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} AR=${TARGET_COMPILER_AR}"
@@ -85,7 +85,7 @@ if [ ! -f ${TARGET_PERFIX_PATH}/lib/libmagic.a ];then
     exit_if_error $? "file配置错误。" 1
 
     #编译。
-    make
+    make -s -j4
     exit_if_error $? "file编译错误。" 1
 
     #安装。

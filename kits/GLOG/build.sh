@@ -32,7 +32,7 @@ exit_if_error()
 GLOG_SRC_PATH=${SHELL_PATH}/glog-0.6.0/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/lib/libglog.so ];then
+if [ ! -f ${TARGET_PREFIX_PATH}/lib/libglog.so ];then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/glog/
@@ -56,16 +56,16 @@ if [ ! -f ${TARGET_PERFIX_PATH}/lib/libglog.so ];then
     #        
 
     #执行配置。
-    ${NATIVE_PERFIX_PATH}/bin/cmake ${GLOG_SRC_PATH}/ \
+    ${NATIVE_PREFIX_PATH}/bin/cmake ${GLOG_SRC_PATH}/ \
         ${TARGET_MAKEFILE_CONF} \
         -G "Unix Makefiles" \
-        -DCMAKE_PREFIX_PATH=${TARGET_PERFIX_PATH}/ \
-        -DCMAKE_INSTALL_PREFIX=${TARGET_PERFIX_PATH}/ \
+        -DCMAKE_PREFIX_PATH=${TARGET_PREFIX_PATH}/ \
+        -DCMAKE_INSTALL_PREFIX=${TARGET_PREFIX_PATH}/ \
         -DCMAKE_C_COMPILER=${TARGET_COMPILER_C} \
         -DCMAKE_CXX_COMPILER=${TARGET_COMPILER_CXX} \
         -DCMAKE_LINKER=${TARGET_COMPILER_LD} \
         -DCMAKE_AR=${TARGET_COMPILER_AR} \
-        -DCMAKE_FIND_ROOT_PATH=${TARGET_PERFIX_PATH}/ \
+        -DCMAKE_FIND_ROOT_PATH=${TARGET_PREFIX_PATH}/ \
         -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
         -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
         -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \

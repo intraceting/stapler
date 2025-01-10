@@ -41,7 +41,7 @@ fi
 GSOAP_SRC_PATH=${SHELL_PATH}/gsoap_2.8.130/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/bin/soapcpp2 ];then
+if [ ! -f ${TARGET_PREFIX_PATH}/bin/soapcpp2 ];then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/gsoap/
@@ -78,9 +78,9 @@ if [ ! -f ${TARGET_PERFIX_PATH}/bin/soapcpp2 ];then
     ./configure \
         ${TARGET_MAKEFILE_CONF} \
         --cache-file=./configure.tmp.cache \
-        --prefix=${TARGET_PERFIX_PATH}/ \
-        --with-zlib=${TARGET_PERFIX_PATH}/ \
-        --with-openssl=${TARGET_PERFIX_PATH}/ \
+        --prefix=${TARGET_PREFIX_PATH}/ \
+        --with-zlib=${TARGET_PREFIX_PATH}/ \
+        --with-openssl=${TARGET_PREFIX_PATH}/ \
         CC=${TARGET_COMPILER_C} \
         CFLAGS="-O3 -fPIC" \
         CXX=${TARGET_COMPILER_CXX} \
@@ -101,7 +101,7 @@ if [ ! -f ${TARGET_PERFIX_PATH}/bin/soapcpp2 ];then
     #     exit_if_error $? "gsoap编译错误。" 1
 
     #     #从本机环境复制一份。
-    #     cp ${NATIVE_PERFIX_PATH}/bin/soapcpp2 ${BUILD_TMP_PATH}/gsoap/src/
+    #     cp ${NATIVE_PREFIX_PATH}/bin/soapcpp2 ${BUILD_TMP_PATH}/gsoap/src/
     #     exit_if_error $? "gsoap编译错误。" 1
 
     #     #再次编译。

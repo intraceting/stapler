@@ -32,7 +32,7 @@ exit_if_error()
 BYACC_SRC_PATH=${SHELL_PATH}/byacc-20230521/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/bin/yacc ] ;then
+if [ ! -f ${TARGET_PREFIX_PATH}/bin/yacc ] ;then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/byacc/
@@ -61,7 +61,7 @@ if [ ! -f ${TARGET_PERFIX_PATH}/bin/yacc ] ;then
     #执行配置。
     ./configure \
         ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PERFIX_PATH}/ \
+        --prefix=${TARGET_PREFIX_PATH}/ \
         CC=${TARGET_COMPILER_C} \
         CFLAGS="-O3 -fPIC" \
         CXX=${TARGET_COMPILER_CXX} \

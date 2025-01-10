@@ -32,7 +32,7 @@ exit_if_error()
 OPENBLAS_SRC_PATH=${SHELL_PATH}/OpenBLAS-0.3.23/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/lib/libopenblas.so ];then
+if [ ! -f ${TARGET_PREFIX_PATH}/lib/libopenblas.so ];then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/openblas/
@@ -58,20 +58,20 @@ if [ ! -f ${TARGET_PERFIX_PATH}/lib/libopenblas.so ];then
 
     #编译。
     make -s -j4 shared ${TARGET_MAKEFILE_CONF} \
-        PREFIX=${TARGET_PERFIX_PATH}/ \
-        HOSTCC=${NATIVE_COMPILER_C} \
-        CC="${TARGET_COMPILER_C}"\
-        AR=${TARGET_COMPILER_AR} \
-        FC=${TARGET_COMPILER_PREFIX}gfortran
+        PREFIX="${TARGET_PREFIX_PATH}/" \
+        HOSTCC="${NATIVE_COMPILER_C}" \
+        CC="${TARGET_COMPILER_C}" \
+        AR="${TARGET_COMPILER_AR}" \
+        FC="${TARGET_COMPILER_FORTRAN}"
     exit_if_error $? "openblas编译错误。" 1
 
     #安装。
     make install ${TARGET_MAKEFILE_CONF} \
-        PREFIX=${TARGET_PERFIX_PATH}/ \
-        HOSTCC=${NATIVE_COMPILER_C} \
-        CC="${TARGET_COMPILER_C}"\
-        AR=${TARGET_COMPILER_AR} \
-        FC=${TARGET_COMPILER_PREFIX}gfortran
+        PREFIX="${TARGET_PREFIX_PATH}/" \
+        HOSTCC="${NATIVE_COMPILER_C}" \
+        CC="${TARGET_COMPILER_C}" \
+        AR="${TARGET_COMPILER_AR}" \
+        FC="${TARGET_COMPILER_FORTRAN}"
     exit_if_error $? "openblas安装错误。" 1
         
 

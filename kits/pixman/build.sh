@@ -32,7 +32,7 @@ exit_if_error()
 PIXMAN_SRC_PATH=${SHELL_PATH}/pixman-0.42.2/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PERFIX_PATH}/lib/libpixman-1.a ] && [ ! -f ${TARGET_PERFIX_PATH}/lib/libpixman-1.so ] ;then
+if [ ! -f ${TARGET_PREFIX_PATH}/lib/libpixman-1.a ] && [ ! -f ${TARGET_PREFIX_PATH}/lib/libpixman-1.so ] ;then
 {
     #临时目录。
     BUILD_TMP_PATH=${BUILD_PATH}/pixman/
@@ -64,7 +64,7 @@ if [ ! -f ${TARGET_PERFIX_PATH}/lib/libpixman-1.a ] && [ ! -f ${TARGET_PERFIX_PA
 
     #执行配置。
     ./configure ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PERFIX_PATH}/ \
+        --prefix=${TARGET_PREFIX_PATH}/ \
         CC=${TARGET_COMPILER_C} \
         AR=${TARGET_COMPILER_AR} \
         LD=${TARGET_COMPILER_LD} \
