@@ -32,10 +32,10 @@ exit_if_error()
 PCRE_SRC_PATH=${SHELL_PATH}/pcre-8.45/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libpcre.a ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libpcre.a ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/pcre/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/pcre/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -50,9 +50,9 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libpcre.a ];then
     chmod +0500 configure
 
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
         TARGET_MAKEFILE_CONF="--host=aarch64"
-    elif [ "${TARGET_PLATFORM}" == "arm" ];then
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
         TARGET_MAKEFILE_CONF="--host=armv7"
     else
         TARGET_MAKEFILE_CONF="--host=x86_64"
@@ -64,10 +64,10 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libpcre.a ];then
 
     #执行配置。
     ./configure ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PREFIX_PATH}/ \
-        CC=${TARGET_COMPILER_C} \
-        CXX=${TARGET_COMPILER_CXX} \
-        AR=${TARGET_COMPILER_AR} \
+        --prefix=${STAPLER_TARGET_PREFIX_PATH}/ \
+        CC=${STAPLER_TARGET_COMPILER_C} \
+        CXX=${STAPLER_TARGET_COMPILER_CXX} \
+        AR=${STAPLER_TARGET_COMPILER_AR} \
         "CFLAGS=-O3 -fPIC" \
         "CXXFLAGS=-O3 -fPIC"
     exit_if_error $? "pcre配置错误。" 1

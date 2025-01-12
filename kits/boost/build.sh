@@ -32,10 +32,10 @@ exit_if_error()
 BOOST_SRC_PATH=${SHELL_PATH}/boost_1_82_0/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libboost_system.so ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libboost_system.so ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/boost/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/boost/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -56,14 +56,14 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libboost_system.so ];then
 
     #
     export BOOST_BUILD_PATH=${BUILD_TMP_PATH}
-    echo "using gcc : ${TARGET_COMPILER_VERSION} : ${TARGET_COMPILER_CXX} ;" > ${BOOST_BUILD_PATH}/user-config.jam
+    echo "using gcc : ${STAPLER_TARGET_COMPILER_VERSION} : ${STAPLER_TARGET_COMPILER_CXX} ;" > ${BOOST_BUILD_PATH}/user-config.jam
 
     #编译。
     ./b2 toolset=gcc
     exit_if_error $? "boost编译错误。" 1
 
     #安装。
-    ./b2 --prefix=${TARGET_PREFIX_PATH}/ toolset=gcc install
+    ./b2 --prefix=${STAPLER_TARGET_PREFIX_PATH}/ toolset=gcc install
     exit_if_error $? "boost安装错误。" 1
 
 

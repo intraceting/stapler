@@ -29,9 +29,9 @@ exit_if_error()
 }
 
 #执行配置。
-if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
     exit_if_error 1 "FILE不支持此平台。" 0
-elif [ "${TARGET_PLATFORM}" == "arm" ];then
+elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
     exit_if_error 1 "FILE不支持此平台。" 0
 else
     exit_if_error 0 "FILE不支持此平台。" 0
@@ -41,10 +41,10 @@ fi
 FILE_SRC_PATH=${SHELL_PATH}/file-FILE5_44/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libmagic.a ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libmagic.a ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/file/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/file/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -58,22 +58,22 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libmagic.a ];then
 
 
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
         TARGET_MAKEFILE_CONF="--host=aarch64"
-    elif [ "${TARGET_PLATFORM}" == "arm" ];then
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
         TARGET_MAKEFILE_CONF="--host=armv7"
     else
         TARGET_MAKEFILE_CONF="--host=x86_64"
     fi
 
     #追加公共配置。
-    TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} --prefix=${TARGET_PREFIX_PATH}/"
+    TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} --prefix=${STAPLER_TARGET_PREFIX_PATH}/"
     TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} --disable-libtool-lock"
-    TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} CC=${TARGET_COMPILER_C}"
-    TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} AR=${TARGET_COMPILER_AR}"
-    TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} LD=${TARGET_COMPILER_LD}"
+    TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} CC=${STAPLER_TARGET_COMPILER_C}"
+    TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} AR=${STAPLER_TARGET_COMPILER_AR}"
+    TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} LD=${STAPLER_TARGET_COMPILER_LD}"
     TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} CFLAGS=-O3"
-    TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} CXX=${TARGET_COMPILER_CXX}"
+    TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} CXX=${STAPLER_TARGET_COMPILER_CXX}"
     TARGET_MAKEFILE_CONF="${TARGET_MAKEFILE_CONF} CXXFLAGS=-O3"
     
     #

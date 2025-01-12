@@ -32,10 +32,10 @@ exit_if_error()
 CAIRO_SRC_PATH=${SHELL_PATH}/cairo-1.16.0/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libcairo.a ] && [ ! -f ${TARGET_PREFIX_PATH}/lib/libcairo.so ] ;then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libcairo.a ] && [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libcairo.so ] ;then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/cairo/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/cairo/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -50,9 +50,9 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libcairo.a ] && [ ! -f ${TARGET_PREFIX_PATH}
     chmod +0500 configure
 
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
         TARGET_MAKEFILE_CONF="--host=aarch64"
-    elif [ "${TARGET_PLATFORM}" == "arm" ];then
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
         TARGET_MAKEFILE_CONF="--host=armv7"
     else
         TARGET_MAKEFILE_CONF="--host=x86_64"
@@ -64,16 +64,16 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libcairo.a ] && [ ! -f ${TARGET_PREFIX_PATH}
 
     #执行配置。
     ./configure ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PREFIX_PATH}/ \
-        CC=${TARGET_COMPILER_C} \
-        AR=${TARGET_COMPILER_AR} \
-        LD=${TARGET_COMPILER_LD} \
-        CXX=${TARGET_COMPILER_CXX} \
-        "CFLAGS=-O3 -fPIC -I${TARGET_PREFIX_PATH}/include/" \
-        "LIBS=-L${TARGET_PREFIX_PATH}/lib/ -lz" \
-        "CXXFLAGS=-O3 -fPIC -I${TARGET_PREFIX_PATH}/include/" \
-        "pixman_CFLAGS=-I${TARGET_PREFIX_PATH}/include/pixman-1/" \
-        "pixman_LIBS=-L${TARGET_PREFIX_PATH}/lib/ -lpixman-1" \
+        --prefix=${STAPLER_TARGET_PREFIX_PATH}/ \
+        CC=${STAPLER_TARGET_COMPILER_C} \
+        AR=${STAPLER_TARGET_COMPILER_AR} \
+        LD=${STAPLER_TARGET_COMPILER_LD} \
+        CXX=${STAPLER_TARGET_COMPILER_CXX} \
+        "CFLAGS=-O3 -fPIC -I${STAPLER_TARGET_PREFIX_PATH}/include/" \
+        "LIBS=-L${STAPLER_TARGET_PREFIX_PATH}/lib/ -lz" \
+        "CXXFLAGS=-O3 -fPIC -I${STAPLER_TARGET_PREFIX_PATH}/include/" \
+        "pixman_CFLAGS=-I${STAPLER_TARGET_PREFIX_PATH}/include/pixman-1/" \
+        "pixman_LIBS=-L${STAPLER_TARGET_PREFIX_PATH}/lib/ -lpixman-1" \
         --enable-png=no \
         --enable-svg=no \
         --enable-test-surfaces=no \

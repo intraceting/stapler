@@ -29,7 +29,7 @@ exit_if_error()
 }
 
 #
-${TARGET_COMPILER_CXX} -E -dM -std=c++17 - </dev/null >/dev/null 2>&1
+${STAPLER_TARGET_COMPILER_CXX} -E -dM -std=c++17 - </dev/null >/dev/null 2>&1
 CHK=$?
 
 #
@@ -38,9 +38,9 @@ if [ ${CHK} -ne 0 ];then
 fi
 
 #
-MAJOR_VER=$(${TARGET_COMPILER_CXX} -dM -E - < /dev/null |grep __GNUC__ | cut -d ' ' -f 3)
-MINOR_VER=$(${TARGET_COMPILER_CXX} -dM -E - < /dev/null |grep __GNUC_MINOR__ | cut -d ' ' -f 3)
-PATCH_VER=$(${TARGET_COMPILER_CXX} -dM -E - < /dev/null |grep __GNUC_PATCHLEVEL__ | cut -d ' ' -f 3)
+MAJOR_VER=$(${STAPLER_TARGET_COMPILER_CXX} -dM -E - < /dev/null |grep __GNUC__ | cut -d ' ' -f 3)
+MINOR_VER=$(${STAPLER_TARGET_COMPILER_CXX} -dM -E - < /dev/null |grep __GNUC_MINOR__ | cut -d ' ' -f 3)
+PATCH_VER=$(${STAPLER_TARGET_COMPILER_CXX} -dM -E - < /dev/null |grep __GNUC_PATCHLEVEL__ | cut -d ' ' -f 3)
 
 #
 NUM_VER=$(expr ${MAJOR_VER} \* 10000 + ${MINOR_VER} \* 100 + ${PATCH_VER})
@@ -55,10 +55,10 @@ fi
 OPENVDB_SRC_PATH=${SHELL_PATH}/openvdb-11.0.0/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libopenvdb.so ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libopenvdb.so ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/openvdb/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/openvdb/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -72,9 +72,9 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libopenvdb.so ];then
     cd ${BUILD_TMP_PATH}/build
       
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
         TARGET_MAKEFILE_CONF="-DCROSS_COMPILE_ARM=1  -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64"
-    elif [ "${TARGET_PLATFORM}" == "arm" ];then
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
         TARGET_MAKEFILE_CONF="-DCROSS_COMPILE_ARM=1 -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=armv7"
     else
         TARGET_MAKEFILE_CONF="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=x86_64"
@@ -83,23 +83,23 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libopenvdb.so ];then
     #        
 
     #执行配置。
-    ${NATIVE_PREFIX_PATH}/bin/cmake ${BUILD_TMP_PATH}/ \
+    ${STAPLER_NATIVE_PREFIX_PATH}/bin/cmake ${BUILD_TMP_PATH}/ \
         ${TARGET_MAKEFILE_CONF} \
         -G "Unix Makefiles" \
-        -DCMAKE_PREFIX_PATH=${TARGET_PREFIX_PATH}/ \
-        -DCMAKE_INSTALL_PREFIX=${TARGET_PREFIX_PATH}/ \
-        -DCMAKE_C_COMPILER=${TARGET_COMPILER_C} \
-        -DCMAKE_CXX_COMPILER=${TARGET_COMPILER_CXX} \
-        -DCMAKE_LINKER=${TARGET_COMPILER_LD} \
-        -DCMAKE_AR=${TARGET_COMPILER_AR} \
-        -DCMAKE_FIND_ROOT_PATH=${TARGET_PREFIX_PATH}/ \
+        -DCMAKE_PREFIX_PATH=${STAPLER_TARGET_PREFIX_PATH}/ \
+        -DCMAKE_INSTALL_PREFIX=${STAPLER_TARGET_PREFIX_PATH}/ \
+        -DCMAKE_C_COMPILER=${STAPLER_TARGET_COMPILER_C} \
+        -DCMAKE_CXX_COMPILER=${STAPLER_TARGET_COMPILER_CXX} \
+        -DCMAKE_LINKER=${STAPLER_TARGET_COMPILER_LD} \
+        -DCMAKE_AR=${STAPLER_TARGET_COMPILER_AR} \
+        -DCMAKE_FIND_ROOT_PATH=${STAPLER_TARGET_PREFIX_PATH}/ \
         -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
         -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
         -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
         -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY \
         -DCMAKE_C_FLAGS="-O3 -fPIC" \
         -DCMAKE_CXX_FLAGS="-O3 -fPIC" \
-        -DCMAKE_EXE_LINKER_FLAGS="-L${TARGET_PREFIX_PATH}/lib -llz4" \
+        -DCMAKE_EXE_LINKER_FLAGS="-L${STAPLER_TARGET_PREFIX_PATH}/lib -llz4" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_CXX_STANDARD=17 \
         -DDISABLE_DEPENDENCY_VERSION_CHECKS=ON 

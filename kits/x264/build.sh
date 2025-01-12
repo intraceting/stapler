@@ -32,10 +32,10 @@ exit_if_error()
 X264_SRC_PATH=${SHELL_PATH}/x264-stable-2022/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libx264.a ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libx264.a ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/x264/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/x264/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -57,19 +57,19 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libx264.a ];then
 
   
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
-        TARGET_MAKEFILE_CONF="--host=${TARGET_MACHINE}"
-    elif [ "${TARGET_PLATFORM}" == "arm" ];then
-        TARGET_MAKEFILE_CONF="--host=${TARGET_MACHINE}"
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
+        TARGET_MAKEFILE_CONF="--host=${STAPLER_TARGET_MACHINE}"
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
+        TARGET_MAKEFILE_CONF="--host=${STAPLER_TARGET_MACHINE}"
     else
-        TARGET_MAKEFILE_CONF="--host=${TARGET_MACHINE}"
+        TARGET_MAKEFILE_CONF="--host=${STAPLER_TARGET_MACHINE}"
     fi
 
     #执行配置。
     ./configure \
         ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PREFIX_PATH}/ \
-        --cross-prefix=${TARGET_COMPILER_PREFIX} \
+        --prefix=${STAPLER_TARGET_PREFIX_PATH}/ \
+        --cross-prefix=${STAPLER_TARGET_COMPILER_PREFIX} \
         --extra-cflags="-O3 -fPIC" \
         --enable-pic \
         --disable-asm \

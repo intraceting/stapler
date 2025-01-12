@@ -32,10 +32,10 @@ exit_if_error()
 NASM_SRC_PATH=${SHELL_PATH}/nasm-2.15/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/bin/nasm ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/bin/nasm ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/nasm/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/nasm/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -55,9 +55,9 @@ if [ ! -f ${TARGET_PREFIX_PATH}/bin/nasm ];then
     exit_if_error $? "autogen配置错误。" 1
 
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
         TARGET_MAKEFILE_CONF="--host=aarch64"
-    elif [ "${TARGET_PLATFORM}" == "arm" ];then
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
         TARGET_MAKEFILE_CONF="--host=armv7"
     else
         TARGET_MAKEFILE_CONF="--host=x86_64"
@@ -66,10 +66,10 @@ if [ ! -f ${TARGET_PREFIX_PATH}/bin/nasm ];then
      #执行配置。
     ./configure \
         ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PREFIX_PATH}/ \
-        CC=${TARGET_COMPILER_C} \
+        --prefix=${STAPLER_TARGET_PREFIX_PATH}/ \
+        CC=${STAPLER_TARGET_COMPILER_C} \
         CFLAGS="-O3 -DEOF=-1 -fPIC" \
-        CXX=${TARGET_COMPILER_CXX} \
+        CXX=${STAPLER_TARGET_COMPILER_CXX} \
         CXXFLAGS="-O3 -DEOF=-1 -fPIC"
     exit_if_error $? "nasm配置错误。" 1
 

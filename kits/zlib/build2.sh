@@ -32,10 +32,10 @@ exit_if_error()
 ZLIB_SRC_PATH=${SHELL_PATH}/zlib-1.2.13/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libz.a ] && [ ! -f ${TARGET_PREFIX_PATH}/lib/libz.so ] ;then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libz.a ] && [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libz.so ] ;then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/zlib/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/zlib/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -50,8 +50,8 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libz.a ] && [ ! -f ${TARGET_PREFIX_PATH}/lib
     chmod +0500 configure
 
     #执行配置。
-    export CROSS_PREFIX=${TARGET_COMPILER_PREFIX}
-    ./configure --prefix=${TARGET_PREFIX_PATH}/
+    export CROSS_PREFIX=${STAPLER_TARGET_COMPILER_PREFIX}
+    ./configure --prefix=${STAPLER_TARGET_PREFIX_PATH}/
     exit_if_error $? "zlib配置错误。" 1
 
     #编译。

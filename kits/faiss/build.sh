@@ -32,10 +32,10 @@ exit_if_error()
 FAISS_SRC_PATH=${SHELL_PATH}/faiss-1.7.4/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libfaiss.so ] && [ ! -f ${TARGET_PREFIX_PATH}/lib64/libfaiss.so ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libfaiss.so ] && [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib64/libfaiss.so ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/faiss/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/faiss/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -47,12 +47,12 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libfaiss.so ] && [ ! -f ${TARGET_PREFIX_PATH
     #find_package(BLAS REQUIRED) 当本机平台和目标平台相同，但编译器不同时，可能不启作用。
 
     #执行配置。
-    ${NATIVE_PREFIX_PATH}/bin/cmake ${FAISS_SRC_PATH} \
-        -DCMAKE_PREFIX_PATH=${TARGET_PREFIX_PATH} \
-        -DCMAKE_INSTALL_PREFIX=${TARGET_PREFIX_PATH}/ \
-        -DCMAKE_C_COMPILER=${TARGET_COMPILER_C} \
-        -DCMAKE_CXX_COMPILER=${TARGET_COMPILER_CXX} \
-        -DCMAKE_FIND_ROOT_PATH=${TARGET_PREFIX_PATH}/ \
+    ${STAPLER_NATIVE_PREFIX_PATH}/bin/cmake ${FAISS_SRC_PATH} \
+        -DCMAKE_PREFIX_PATH=${STAPLER_TARGET_PREFIX_PATH} \
+        -DCMAKE_INSTALL_PREFIX=${STAPLER_TARGET_PREFIX_PATH}/ \
+        -DCMAKE_C_COMPILER=${STAPLER_TARGET_COMPILER_C} \
+        -DCMAKE_CXX_COMPILER=${STAPLER_TARGET_COMPILER_CXX} \
+        -DCMAKE_FIND_ROOT_PATH=${STAPLER_TARGET_PREFIX_PATH}/ \
         -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
         -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
         -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
@@ -65,7 +65,7 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libfaiss.so ] && [ ! -f ${TARGET_PREFIX_PATH
         -DFAISS_ENABLE_C_API=ON \
         -DBUILD_TESTING=OFF \
         -DBUILD_SHARED_LIBS=ON \
-        -DMKL_LIBRARIES=${TARGET_PREFIX_PATH}/lib/libopenblas.so
+        -DMKL_LIBRARIES=${STAPLER_TARGET_PREFIX_PATH}/lib/libopenblas.so
     exit_if_error $? "faiss配置错误。" 1
 
     #编译。

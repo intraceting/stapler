@@ -33,10 +33,10 @@ OPENCV_SRC_PATH=${SHELL_PATH}//opencv-4.3.0/
 OPENCV_CONTRIB_SRC_PATH=${SHELL_PATH}/opencv_contrib-4.3.0/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libopencv_core.so ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libopencv_core.so ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/opencv/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/opencv/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -46,9 +46,9 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libopencv_core.so ];then
     cd ${BUILD_TMP_PATH}/
 
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
         TARGET_TOOLCHAIN_FILE="${OPENCV_SRC_PATH}/platforms/linux/aarch64-gnu.toolchain.cmake -DAARCH64=ON"
-    elif [ "${TARGET_PLATFORM}" == "arm" ] ;then
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ] ;then
         TARGET_TOOLCHAIN_FILE="${OPENCV_SRC_PATH}/platforms/linux/arm-gnueabi.toolchain.cmake -DENABLE_NEON=ON -DARM=ON"
     else
         TARGET_TOOLCHAIN_FILE="${OPENCV_SRC_PATH}/platforms/linux/gnu.toolchain.cmake"
@@ -60,26 +60,26 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libopencv_core.so ];then
    
 
     #执行配置。
-    ${NATIVE_PREFIX_PATH}/bin/cmake ${OPENCV_SRC_PATH} \
-        -DCMAKE_PREFIX_PATH=${TARGET_PREFIX_PATH}/ \
-        -DCMAKE_INSTALL_PREFIX=${TARGET_PREFIX_PATH}/ \
-        -DCMAKE_C_COMPILER=${TARGET_COMPILER_C} \
-        -DCMAKE_CXX_COMPILER=${TARGET_COMPILER_CXX} \
-        -DCMAKE_LINKER=${TARGET_COMPILER_LD} \
-        -DCMAKE_AR=${TARGET_COMPILER_AR} \
+    ${STAPLER_NATIVE_PREFIX_PATH}/bin/cmake ${OPENCV_SRC_PATH} \
+        -DCMAKE_PREFIX_PATH=${STAPLER_TARGET_PREFIX_PATH}/ \
+        -DCMAKE_INSTALL_PREFIX=${STAPLER_TARGET_PREFIX_PATH}/ \
+        -DCMAKE_C_COMPILER=${STAPLER_TARGET_COMPILER_C} \
+        -DCMAKE_CXX_COMPILER=${STAPLER_TARGET_COMPILER_CXX} \
+        -DCMAKE_LINKER=${STAPLER_TARGET_COMPILER_LD} \
+        -DCMAKE_AR=${STAPLER_TARGET_COMPILER_AR} \
         -DCMAKE_TOOLCHAIN_FILE=${TARGET_TOOLCHAIN_FILE}/ \
-        -DCMAKE_FIND_ROOT_PATH=${TARGET_PREFIX_PATH}/ \
+        -DCMAKE_FIND_ROOT_PATH=${STAPLER_TARGET_PREFIX_PATH}/ \
         -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
         -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
         -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \
         -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY \
-        -DCMAKE_EXE_LINKER_FLAGS="-Wl,-rpath-link,${TARGET_PREFIX_PATH}/lib" \
+        -DCMAKE_EXE_LINKER_FLAGS="-Wl,-rpath-link,${STAPLER_TARGET_PREFIX_PATH}/lib" \
         -DCMAKE_C_FLAGS=-O3 \
         -DCMAKE_CXX_FLAGS=-O3 \
         -DCMAKE_BUILD_TYPE=Release \
-        -D3RDPART_LIBS_DIR=${TARGET_PREFIX_PATH}/:${TARGET_COMPILER_SYSROOT} \
+        -D3RDPART_LIBS_DIR=${STAPLER_TARGET_PREFIX_PATH}/:${STAPLER_TARGET_COMPILER_SYSROOT} \
         -DOPENCV_EXTRA_MODULES_PATH=${OPENCV_CONTRIB_SRC_PATH}/modules \
-        -DOPENCV_DOWNLOAD_PATH="${BUILD_PATH}/opencv.cache/" \
+        -DOPENCV_DOWNLOAD_PATH="${STAPLER_BUILD_PATH}/opencv.cache/" \
         -DOPENCV_BOOSTDESC_URL="${RAW_GITHUB_HOST}/opencv/opencv_3rdparty/34e4206aef44d50e6bbcd0ab06354b52e7466d26/" \
         -DOPENCV_VGGDESC_URL="${RAW_GITHUB_HOST}/opencv/opencv_3rdparty/fccf7cd6a4b12079f73bbfb21745f9babcd4eb1d/" \
         -DOPENCV_FACE_ALIGNMENT_URL="${RAW_GITHUB_HOST}/opencv/opencv_3rdparty/8afa57abc8229d611c4937165d20e2a2d9fc5a12/" \

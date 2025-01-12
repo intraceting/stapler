@@ -32,10 +32,10 @@ exit_if_error()
 LIBUUID_SRC_PATH=${SHELL_PATH}/libuuid-1.0.3/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libuuid.a ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libuuid.a ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/libuuid/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/libuuid/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -54,12 +54,12 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libuuid.a ];then
     exit_if_error $? "autoreconf配置错误。" 1
 
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
-        ./configure --prefix=${TARGET_PREFIX_PATH}/ --host=aarch64 CC=${TARGET_COMPILER_C} CFLAGS="-O3 -DEOF=-1 -fPIC" CXX=${TARGET_COMPILER_CXX} CXXFLAGS="-O3 -DEOF=-1 -fPIC -fPIC"
-    elif [ "${TARGET_PLATFORM}" == "arm" ] ;then
-        ./configure --prefix=${TARGET_PREFIX_PATH}/ --host=arm CC=${TARGET_COMPILER_C} CFLAGS="-O3 -DEOF=-1 -fPIC"  CXX=${TARGET_COMPILER_CXX} CXXFLAGS="-O3 -DEOF=-1 -fPIC -fPIC"
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
+        ./configure --prefix=${STAPLER_TARGET_PREFIX_PATH}/ --host=aarch64 CC=${STAPLER_TARGET_COMPILER_C} CFLAGS="-O3 -DEOF=-1 -fPIC" CXX=${STAPLER_TARGET_COMPILER_CXX} CXXFLAGS="-O3 -DEOF=-1 -fPIC -fPIC"
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ] ;then
+        ./configure --prefix=${STAPLER_TARGET_PREFIX_PATH}/ --host=arm CC=${STAPLER_TARGET_COMPILER_C} CFLAGS="-O3 -DEOF=-1 -fPIC"  CXX=${STAPLER_TARGET_COMPILER_CXX} CXXFLAGS="-O3 -DEOF=-1 -fPIC -fPIC"
     else
-        ./configure --prefix=${TARGET_PREFIX_PATH}/ --host=x86_64 CC=${TARGET_COMPILER_C} CFLAGS="-O3 -DEOF=-1 -fPIC"  CXX=${TARGET_COMPILER_CXX} CXXFLAGS="-O3 -DEOF=-1 -fPIC -fPIC"
+        ./configure --prefix=${STAPLER_TARGET_PREFIX_PATH}/ --host=x86_64 CC=${STAPLER_TARGET_COMPILER_C} CFLAGS="-O3 -DEOF=-1 -fPIC"  CXX=${STAPLER_TARGET_COMPILER_CXX} CXXFLAGS="-O3 -DEOF=-1 -fPIC -fPIC"
     fi
 
 

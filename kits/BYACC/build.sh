@@ -32,10 +32,10 @@ exit_if_error()
 BYACC_SRC_PATH=${SHELL_PATH}/byacc-20230521/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/bin/yacc ] ;then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/bin/yacc ] ;then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/byacc/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/byacc/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -50,9 +50,9 @@ if [ ! -f ${TARGET_PREFIX_PATH}/bin/yacc ] ;then
     chmod +0500 configure
 
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
         TARGET_MAKEFILE_CONF="--host=aarch64"
-    elif [ "${TARGET_PLATFORM}" == "arm" ];then
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
         TARGET_MAKEFILE_CONF="--host=arm"
     else
         TARGET_MAKEFILE_CONF="--host=x86_64"
@@ -61,13 +61,13 @@ if [ ! -f ${TARGET_PREFIX_PATH}/bin/yacc ] ;then
     #执行配置。
     ./configure \
         ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PREFIX_PATH}/ \
-        CC=${TARGET_COMPILER_C} \
+        --prefix=${STAPLER_TARGET_PREFIX_PATH}/ \
+        CC=${STAPLER_TARGET_COMPILER_C} \
         CFLAGS="-O3 -fPIC" \
-        CXX=${TARGET_COMPILER_CXX} \
+        CXX=${STAPLER_TARGET_COMPILER_CXX} \
         CXXFLAGS="-O3 -fPIC" \
-        AR=${TARGET_COMPILER_AR} \
-        RANLIB=${TARGET_COMPILER_RANLIB}
+        AR=${STAPLER_TARGET_COMPILER_AR} \
+        RANLIB=${STAPLER_TARGET_COMPILER_RANLIB}
     exit_if_error $? "byacc配置错误。" 1
 
     #编译。

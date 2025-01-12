@@ -32,10 +32,10 @@ exit_if_error()
 PIXMAN_SRC_PATH=${SHELL_PATH}/pixman-0.42.2/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libpixman-1.a ] && [ ! -f ${TARGET_PREFIX_PATH}/lib/libpixman-1.so ] ;then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libpixman-1.a ] && [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libpixman-1.so ] ;then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/pixman/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/pixman/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -50,9 +50,9 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libpixman-1.a ] && [ ! -f ${TARGET_PREFIX_PA
     chmod +0500 configure
 
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
         TARGET_MAKEFILE_CONF="--host=aarch64"
-    elif [ "${TARGET_PLATFORM}" == "arm" ];then
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
         TARGET_MAKEFILE_CONF="--host=armv7"
     else
         TARGET_MAKEFILE_CONF="--host=x86_64"
@@ -64,12 +64,12 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libpixman-1.a ] && [ ! -f ${TARGET_PREFIX_PA
 
     #执行配置。
     ./configure ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PREFIX_PATH}/ \
-        CC=${TARGET_COMPILER_C} \
-        AR=${TARGET_COMPILER_AR} \
-        LD=${TARGET_COMPILER_LD} \
+        --prefix=${STAPLER_TARGET_PREFIX_PATH}/ \
+        CC=${STAPLER_TARGET_COMPILER_C} \
+        AR=${STAPLER_TARGET_COMPILER_AR} \
+        LD=${STAPLER_TARGET_COMPILER_LD} \
         "CFLAGS=-O3 -fPIC" \
-        CXX=${TARGET_COMPILER_CXX} \
+        CXX=${STAPLER_TARGET_COMPILER_CXX} \
         "CXXFLAGS=-O3 -fPIC" \
         --enable-libpng=no
     exit_if_error $? "pixman配置错误。" 1

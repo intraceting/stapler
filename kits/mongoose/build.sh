@@ -32,10 +32,10 @@ exit_if_error()
 MONGOOSE_SRC_PATH=${SHELL_PATH}/mongoose-7.11/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libmongoose.so ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libmongoose.so ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/mongoose/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/mongoose/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -47,7 +47,7 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libmongoose.so ];then
     cd ${BUILD_TMP_PATH}/
 
     #编译和安装。
-    make -s -j4 install PREFIX=${TARGET_PREFIX_PATH}/ SSL=OPENSSL OPENSSL=${TARGET_PREFIX_PATH}/ CC=${TARGET_COMPILER_C} AR=${TARGET_COMPILER_AR} "CFLAGS=-fPIC"
+    make -s -j4 install PREFIX=${STAPLER_TARGET_PREFIX_PATH}/ SSL=OPENSSL OPENSSL=${STAPLER_TARGET_PREFIX_PATH}/ CC=${STAPLER_TARGET_COMPILER_C} AR=${STAPLER_TARGET_COMPILER_AR} "CFLAGS=-fPIC"
     exit_if_error $? "mongoose编译和安装错误。" 1
 
     #恢复工作目录。

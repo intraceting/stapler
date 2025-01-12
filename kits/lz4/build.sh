@@ -32,10 +32,10 @@ exit_if_error()
 LZ4_SRC_PATH=${SHELL_PATH}/lz4-1.9.4/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/bin/lz4 ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/bin/lz4 ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/file/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/file/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -47,11 +47,11 @@ if [ ! -f ${TARGET_PREFIX_PATH}/bin/lz4 ];then
     cd ${BUILD_TMP_PATH}/
    
     #编译。
-    make lib CC=${TARGET_COMPILER_C} LD=${TARGET_COMPILER_LD} AR=${TARGET_COMPILER_AR} VERBOSE=1
+    make lib CC=${STAPLER_TARGET_COMPILER_C} LD=${STAPLER_TARGET_COMPILER_LD} AR=${STAPLER_TARGET_COMPILER_AR} VERBOSE=1
     exit_if_error $? "lz4编译错误。" 1
 
     #安装。
-    make install PREFIX=${TARGET_PREFIX_PATH}/ CC=${TARGET_COMPILER_C} LD=${TARGET_COMPILER_LD} AR=${TARGET_COMPILER_AR} VERBOSE=1
+    make install PREFIX=${STAPLER_TARGET_PREFIX_PATH}/ CC=${STAPLER_TARGET_COMPILER_C} LD=${STAPLER_TARGET_COMPILER_LD} AR=${STAPLER_TARGET_COMPILER_AR} VERBOSE=1
     exit_if_error $? "lz4安装错误。" 1
 
     #恢复工作目录。

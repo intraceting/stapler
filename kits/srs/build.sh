@@ -32,10 +32,10 @@ exit_if_error()
 SRS_SRC_PATH=${SHELL_PATH}/srs-6.0.48/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/objs/srs ] ;then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/objs/srs ] ;then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/srs/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/srs/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -50,9 +50,9 @@ if [ ! -f ${TARGET_PREFIX_PATH}/objs/srs ] ;then
     chmod +0500 configure
 
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
         TARGET_MAKEFILE_CONF="--arch=aarch64 --cross-build"
-    elif [ "${TARGET_PLATFORM}" == "arm" ];then
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
         TARGET_MAKEFILE_CONF="--arch=armv7 --cross-build"
     else
         TARGET_MAKEFILE_CONF="--arch=x86_64"
@@ -60,15 +60,15 @@ if [ ! -f ${TARGET_PREFIX_PATH}/objs/srs ] ;then
 
     #执行配置。
     ./configure ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PREFIX_PATH}/ \
-        --host=${TARGET_MACHINE} \
-        --cross-prefix=${TARGET_COMPILER_PREFIX} \
-        --cc=${TARGET_COMPILER_C} \
-        --cxx=${TARGET_COMPILER_CXX} \
-        --ar=${TARGET_COMPILER_AR} \
-        --ld=${TARGET_COMPILER_LD} \
-        --randlib=${TARGET_COMPILER_PREFIX}randlib \
-        --extra-flags="-L${TARGET_PREFIX_PATH}/lib/ -I${TARGET_PREFIX_PATH}/include/" \
+        --prefix=${STAPLER_TARGET_PREFIX_PATH}/ \
+        --host=${STAPLER_TARGET_MACHINE} \
+        --cross-prefix=${STAPLER_TARGET_COMPILER_PREFIX} \
+        --cc=${STAPLER_TARGET_COMPILER_C} \
+        --cxx=${STAPLER_TARGET_COMPILER_CXX} \
+        --ar=${STAPLER_TARGET_COMPILER_AR} \
+        --ld=${STAPLER_TARGET_COMPILER_LD} \
+        --randlib=${STAPLER_TARGET_COMPILER_RANLIB} \
+        --extra-flags="-L${STAPLER_TARGET_PREFIX_PATH}/lib/ -I${STAPLER_TARGET_PREFIX_PATH}/include/" \
         --jobs=6 \
         --srt=off \
         --rtc=off \

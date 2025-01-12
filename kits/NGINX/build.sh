@@ -29,9 +29,9 @@ exit_if_error()
 }
 
 #执行配置。
-if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
     exit_if_error 1 "nginx不支持此平台。" 0
-elif [ "${TARGET_PLATFORM}" == "arm" ];then
+elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
     exit_if_error 1 "nginx不支持此平台。" 0
 else
     exit_if_error 1 "nginx不支持此平台。" 0
@@ -45,14 +45,14 @@ OPENSSL_SRC_PATH=${SHELL_PATH}/../openssl/openssl-1.1.1s/
 ZLIB_SRC_PATH=${SHELL_PATH}/../zlib/zlib-1.2.13/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/sbin/nginx ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/sbin/nginx ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/nginx/
-    BUILD_RTMP_TMP_PATH=${BUILD_PATH}/nginx-rtmp-module/
-    BUILD_PCRE_TMP_PATH=${BUILD_PATH}/pcre/
-    BUILD_OPENSSL_TMP_PATH=${BUILD_PATH}/openssl/
-    BUILD_ZLIB_TMP_PATH=${BUILD_PATH}/zlib/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/nginx/
+    BUILD_RTMP_TMP_PATH=${STAPLER_BUILD_PATH}/nginx-rtmp-module/
+    BUILD_PCRE_TMP_PATH=${STAPLER_BUILD_PATH}/pcre/
+    BUILD_OPENSSL_TMP_PATH=${STAPLER_BUILD_PATH}/openssl/
+    BUILD_ZLIB_TMP_PATH=${STAPLER_BUILD_PATH}/zlib/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     rm -rf ${BUILD_RTMP_TMP_PATH}
@@ -83,16 +83,16 @@ if [ ! -f ${TARGET_PREFIX_PATH}/sbin/nginx ];then
      #   --with-zlib=${BUILD_ZLIB_TMP_PATH}/ \
     #执行配置。
     ./configure \
-        --prefix=${TARGET_PREFIX_PATH}/ \
+        --prefix=${STAPLER_TARGET_PREFIX_PATH}/ \
         --user=root --group=root \
         --sbin-path=/usr/local/nginx/sbin/nginx \
         --conf-path=/usr/local/nginx/conf/nginx.conf \
         --pid-path=/usr/local/nginx/logs/nginx.pid \
         --error-log-path=/usr/local/nginx/logs/error.log \
         --http-log-path=/usr/local/nginx/logs/access.log \
-        --crossbuild=${TARGET_MACHINE} \
-        --with-cc=${TARGET_COMPILER_C} \
-        --with-cpp=${TARGET_COMPILER_CXX} \
+        --crossbuild=${STAPLER_TARGET_MACHINE} \
+        --with-cc=${STAPLER_TARGET_COMPILER_C} \
+        --with-cpp=${STAPLER_TARGET_COMPILER_CXX} \
         --with-cc-opt='-D_FILE_OFFSET_BITS=64 -D_LARGE_FILE' \
         --with-ld-opt='-D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE' \
         --add-module=${BUILD_RTMP_TMP_PATH}/ \

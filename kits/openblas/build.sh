@@ -32,10 +32,10 @@ exit_if_error()
 OPENBLAS_SRC_PATH=${SHELL_PATH}/OpenBLAS-0.3.23/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libopenblas.so ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libopenblas.so ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/openblas/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/openblas/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -48,9 +48,9 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libopenblas.so ];then
 
 
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
         TARGET_MAKEFILE_CONF="TARGET=ARMV8"
-    elif [ "${TARGET_PLATFORM}" == "arm" ] ;then
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ] ;then
         TARGET_MAKEFILE_CONF="TARGET=ARMV7"
     else
         TARGET_MAKEFILE_CONF=""
@@ -58,20 +58,20 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libopenblas.so ];then
 
     #编译。
     make -s -j4 shared ${TARGET_MAKEFILE_CONF} \
-        PREFIX="${TARGET_PREFIX_PATH}/" \
-        HOSTCC="${NATIVE_COMPILER_C}" \
-        CC="${TARGET_COMPILER_C}" \
-        AR="${TARGET_COMPILER_AR}" \
-        FC="${TARGET_COMPILER_FORTRAN}"
+        PREFIX="${STAPLER_TARGET_PREFIX_PATH}/" \
+        HOSTCC="${STAPLER_NATIVE_COMPILER_C}" \
+        CC="${STAPLER_TARGET_COMPILER_C}" \
+        AR="${STAPLER_TARGET_COMPILER_AR}" \
+        FC="${STAPLER_TARGET_COMPILER_FORTRAN}"
     exit_if_error $? "openblas编译错误。" 1
 
     #安装。
     make install ${TARGET_MAKEFILE_CONF} \
-        PREFIX="${TARGET_PREFIX_PATH}/" \
-        HOSTCC="${NATIVE_COMPILER_C}" \
-        CC="${TARGET_COMPILER_C}" \
-        AR="${TARGET_COMPILER_AR}" \
-        FC="${TARGET_COMPILER_FORTRAN}"
+        PREFIX="${STAPLER_TARGET_PREFIX_PATH}/" \
+        HOSTCC="${STAPLER_NATIVE_COMPILER_C}" \
+        CC="${STAPLER_TARGET_COMPILER_C}" \
+        AR="${STAPLER_TARGET_COMPILER_AR}" \
+        FC="${STAPLER_TARGET_COMPILER_FORTRAN}"
     exit_if_error $? "openblas安装错误。" 1
         
 

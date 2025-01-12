@@ -29,7 +29,7 @@ exit_if_error()
 }
 
 #检测编译器支持标准。
-${TARGET_COMPILER_C} -E -dM -std=c++2a - </dev/null >/dev/null 2>&1
+${STAPLER_TARGET_COMPILER_C} -E -dM -std=c++2a - </dev/null >/dev/null 2>&1
 STD_STATUS=$?
 
 #执行配置。
@@ -41,10 +41,10 @@ fi
 GTL_SRC_PATH=${SHELL_PATH}/gtl-1.1.8/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/include/gtl/gtl_base.hpp ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/include/gtl/gtl_base.hpp ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/gtl/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/gtl/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -54,9 +54,9 @@ if [ ! -f ${TARGET_PREFIX_PATH}/include/gtl/gtl_base.hpp ];then
     cd ${BUILD_TMP_PATH}/
       
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
         TARGET_MAKEFILE_CONF="-DCROSS_COMPILE_ARM=1  -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=aarch64"
-    elif [ "${TARGET_PLATFORM}" == "arm" ];then
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
         TARGET_MAKEFILE_CONF="-DCROSS_COMPILE_ARM=1 -DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=armv7"
     else
         TARGET_MAKEFILE_CONF="-DCMAKE_SYSTEM_NAME=Linux -DCMAKE_SYSTEM_PROCESSOR=x86_64"
@@ -65,16 +65,16 @@ if [ ! -f ${TARGET_PREFIX_PATH}/include/gtl/gtl_base.hpp ];then
     #        
 
     #执行配置。
-    ${NATIVE_PREFIX_PATH}/bin/cmake ${GTL_SRC_PATH}/ \
+    ${STAPLER_NATIVE_PREFIX_PATH}/bin/cmake ${GTL_SRC_PATH}/ \
         ${TARGET_MAKEFILE_CONF} \
         -G "Unix Makefiles" \
-        -DCMAKE_PREFIX_PATH=${TARGET_PREFIX_PATH}/ \
-        -DCMAKE_INSTALL_PREFIX=${TARGET_PREFIX_PATH}/ \
-        -DCMAKE_C_COMPILER=${TARGET_COMPILER_C} \
-        -DCMAKE_CXX_COMPILER=${TARGET_COMPILER_CXX} \
-        -DCMAKE_LINKER=${TARGET_COMPILER_LD} \
-        -DCMAKE_AR=${TARGET_COMPILER_AR} \
-        -DCMAKE_FIND_ROOT_PATH=${TARGET_PREFIX_PATH}/ \
+        -DCMAKE_PREFIX_PATH=${STAPLER_TARGET_PREFIX_PATH}/ \
+        -DCMAKE_INSTALL_PREFIX=${STAPLER_TARGET_PREFIX_PATH}/ \
+        -DCMAKE_C_COMPILER=${STAPLER_TARGET_COMPILER_C} \
+        -DCMAKE_CXX_COMPILER=${STAPLER_TARGET_COMPILER_CXX} \
+        -DCMAKE_LINKER=${STAPLER_TARGET_COMPILER_LD} \
+        -DCMAKE_AR=${STAPLER_TARGET_COMPILER_AR} \
+        -DCMAKE_FIND_ROOT_PATH=${STAPLER_TARGET_PREFIX_PATH}/ \
         -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
         -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
         -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \

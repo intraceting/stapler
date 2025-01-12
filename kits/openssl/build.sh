@@ -32,10 +32,10 @@ exit_if_error()
 OPENSSL_SRC_PATH=${SHELL_PATH}/openssl-1.1.1s/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libssl.so ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libssl.so ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/openssl/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/openssl/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -47,12 +47,12 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libssl.so ];then
     cd ${BUILD_TMP_PATH}/
 
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
-        ${OPENSSL_SRC_PATH}/Configure --prefix=${TARGET_PREFIX_PATH}/ --cross-compile-prefix=${TARGET_COMPILER_PREFIX} linux-aarch64 
-    elif [ "${TARGET_PLATFORM}" == "arm" ] ;then
-        ${OPENSSL_SRC_PATH}/Configure --prefix=${TARGET_PREFIX_PATH}/ --cross-compile-prefix=${TARGET_COMPILER_PREFIX} linux-armv4
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
+        ${OPENSSL_SRC_PATH}/Configure --prefix=${STAPLER_TARGET_PREFIX_PATH}/ --cross-compile-prefix=${STAPLER_TARGET_COMPILER_PREFIX} linux-aarch64 
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ] ;then
+        ${OPENSSL_SRC_PATH}/Configure --prefix=${STAPLER_TARGET_PREFIX_PATH}/ --cross-compile-prefix=${STAPLER_TARGET_COMPILER_PREFIX} linux-armv4
     else
-        ${OPENSSL_SRC_PATH}/Configure --prefix=${TARGET_PREFIX_PATH}/ --cross-compile-prefix=${TARGET_COMPILER_PREFIX} linux-x86_64
+        ${OPENSSL_SRC_PATH}/Configure --prefix=${STAPLER_TARGET_PREFIX_PATH}/ --cross-compile-prefix=${STAPLER_TARGET_COMPILER_PREFIX} linux-x86_64
     fi
     exit_if_error $? "openssl配置错误。" 1
 

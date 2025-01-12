@@ -32,10 +32,10 @@ exit_if_error()
 OSQP_SRC_PATH=${SHELL_PATH}/osqp-20240116/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libosqp.so ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libosqp.so ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/osqp/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/osqp/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -48,7 +48,7 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libosqp.so ];then
     cd ${BUILD_TMP_PATH}/build/
 
     #指定交叉编译环境的目录
-    #set(CMAKE_FIND_ROOT_PATH ${TARGET_PREFIX_PATH})
+    #set(CMAKE_FIND_ROOT_PATH ${STAPLER_TARGET_PREFIX_PATH})
     #从来不在指定目录(交叉编译)下查找工具程序。(编译时利用的是宿主的工具)
     #set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
     #只在指定目录(交叉编译)下查找库文件
@@ -59,12 +59,12 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libosqp.so ];then
     #set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
     #执行配置。
-    ${NATIVE_PREFIX_PATH}/bin/cmake ${BUILD_TMP_PATH} \
-        -DCMAKE_PREFIX_PATH=${TARGET_PREFIX_PATH}/ \
-        -DCMAKE_INSTALL_PREFIX=${TARGET_PREFIX_PATH}/ \
-        -DCMAKE_C_COMPILER=${TARGET_COMPILER_C} \
-        -DCMAKE_CXX_COMPILER=${TARGET_COMPILER_CXX} \
-        -DCMAKE_FIND_ROOT_PATH=${TARGET_PREFIX_PATH}/ \
+    ${STAPLER_NATIVE_PREFIX_PATH}/bin/cmake ${BUILD_TMP_PATH} \
+        -DCMAKE_PREFIX_PATH=${STAPLER_TARGET_PREFIX_PATH}/ \
+        -DCMAKE_INSTALL_PREFIX=${STAPLER_TARGET_PREFIX_PATH}/ \
+        -DCMAKE_C_COMPILER=${STAPLER_TARGET_COMPILER_C} \
+        -DCMAKE_CXX_COMPILER=${STAPLER_TARGET_COMPILER_CXX} \
+        -DCMAKE_FIND_ROOT_PATH=${STAPLER_TARGET_PREFIX_PATH}/ \
         -DCMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER \
         -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY \
         -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY \

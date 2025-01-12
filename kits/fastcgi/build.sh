@@ -32,10 +32,10 @@ exit_if_error()
 FASTCGI_SRC_PATH=${SHELL_PATH}/fcgi2-2.4.2/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libfcgi.a ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libfcgi.a ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/fastcgi/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/fastcgi/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -55,12 +55,12 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libfcgi.a ];then
     exit_if_error $? "autogen配置错误。" 1
 
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
-        ./configure --prefix=${TARGET_PREFIX_PATH}/ --host=arm CC=${TARGET_COMPILER_C} CFLAGS="-O3 -DEOF=-1 -fPIC" CXX=${TARGET_COMPILER_CXX} CXXFLAGS="-O3 -DEOF=-1 -fPIC"
-    elif [ "${TARGET_PLATFORM}" == "arm" ] ;then
-        ./configure --prefix=${TARGET_PREFIX_PATH}/ --host=arm CC=${TARGET_COMPILER_C} CFLAGS="-O3 -DEOF=-1 -fPIC"  CXX=${TARGET_COMPILER_CXX} CXXFLAGS="-O3 -DEOF=-1 -fPIC"
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
+        ./configure --prefix=${STAPLER_TARGET_PREFIX_PATH}/ --host=arm CC=${STAPLER_TARGET_COMPILER_C} CFLAGS="-O3 -DEOF=-1 -fPIC" CXX=${STAPLER_TARGET_COMPILER_CXX} CXXFLAGS="-O3 -DEOF=-1 -fPIC"
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ] ;then
+        ./configure --prefix=${STAPLER_TARGET_PREFIX_PATH}/ --host=arm CC=${STAPLER_TARGET_COMPILER_C} CFLAGS="-O3 -DEOF=-1 -fPIC"  CXX=${STAPLER_TARGET_COMPILER_CXX} CXXFLAGS="-O3 -DEOF=-1 -fPIC"
     else
-        ./configure --prefix=${TARGET_PREFIX_PATH}/ --host=x86_64 CFLAGS="-O3 -DEOF=-1 -fPIC" CXXFLAGS="-O3 -DEOF=-1 -fPIC"
+        ./configure --prefix=${STAPLER_TARGET_PREFIX_PATH}/ --host=x86_64 CFLAGS="-O3 -DEOF=-1 -fPIC" CXXFLAGS="-O3 -DEOF=-1 -fPIC"
     fi
 
 

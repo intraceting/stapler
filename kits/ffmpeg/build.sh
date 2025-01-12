@@ -32,10 +32,10 @@ exit_if_error()
 FFMPEG_SRC_PATH=${SHELL_PATH}/ffmpeg-4.1/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/bin/ffmpeg ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/bin/ffmpeg ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/ffmpeg/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/ffmpeg/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -51,9 +51,9 @@ if [ ! -f ${TARGET_PREFIX_PATH}/bin/ffmpeg ];then
     chmod +0500 ffbuild/*.sh
 
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
         TARGET_MAKEFILE_CONF="--arch=aarch64"
-    elif [ "${TARGET_PLATFORM}" == "arm" ];then
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
         TARGET_MAKEFILE_CONF="--arch=armv7"
     else
         TARGET_MAKEFILE_CONF="--arch=x86_64"
@@ -64,12 +64,12 @@ if [ ! -f ${TARGET_PREFIX_PATH}/bin/ffmpeg ];then
     #执行配置。
     ./configure \
         ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PREFIX_PATH}/ \
+        --prefix=${STAPLER_TARGET_PREFIX_PATH}/ \
         --target-os=linux \
         --enable-cross-compile \
-        --cross-prefix=${TARGET_COMPILER_PREFIX} \
-        --extra-cflags="-I${TARGET_PREFIX_PATH}/include" \
-        --extra-ldflags="-L${TARGET_PREFIX_PATH}/lib" \
+        --cross-prefix=${STAPLER_TARGET_COMPILER_PREFIX} \
+        --extra-cflags="-I${STAPLER_TARGET_PREFIX_PATH}/include" \
+        --extra-ldflags="-L${STAPLER_TARGET_PREFIX_PATH}/lib" \
         --extra-libs="-lpthread -lm -ldl" \
         --pkg-config="pkg-config" \
         --enable-gpl \

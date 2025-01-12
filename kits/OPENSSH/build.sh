@@ -32,10 +32,10 @@ exit_if_error()
 OPENSSH_SRC_PATH=${SHELL_PATH}/openssh-8.2p1/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/sbin/sshd ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/sbin/sshd ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/openssh/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/openssh/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -51,9 +51,9 @@ if [ ! -f ${TARGET_PREFIX_PATH}/sbin/sshd ];then
     exit_if_error $? "autoreconf配置错误。" 1
 
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
         TARGET_MAKEFILE_CONF="--host=aarch64-linux"
-    elif [ "${TARGET_PLATFORM}" == "arm" ];then
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
         TARGET_MAKEFILE_CONF="--host=armv7-linux"
     else
         TARGET_MAKEFILE_CONF="--host=x86_64-linux"
@@ -61,20 +61,20 @@ if [ ! -f ${TARGET_PREFIX_PATH}/sbin/sshd ];then
 
     #执行配置。
     ./configure ${TARGET_MAKEFILE_CONF} \
-        --prefix="${TARGET_PREFIX_PATH}/" \
-        CC="${TARGET_COMPILER_C}" \
-        AR="${TARGET_COMPILER_AR}" \
-        LD="${TARGET_COMPILER_LD}" \
+        --prefix="${STAPLER_TARGET_PREFIX_PATH}/" \
+        CC="${STAPLER_TARGET_COMPILER_C}" \
+        AR="${STAPLER_TARGET_COMPILER_AR}" \
+        LD="${STAPLER_TARGET_COMPILER_LD}" \
         CFLAGS="-O3" \
-        CXX="${TARGET_COMPILER_CXX}" \
+        CXX="${STAPLER_TARGET_COMPILER_CXX}" \
         CXXFLAGS="-O3" \
-        --with-zlib="${TARGET_PREFIX_PATH}" \
+        --with-zlib="${STAPLER_TARGET_PREFIX_PATH}" \
         --without-zlib-version-check \
-        --with-ssl-dir="${TARGET_PREFIX_PATH}" \
+        --with-ssl-dir="${STAPLER_TARGET_PREFIX_PATH}" \
         --without-openssl-header-check \
         --disable-etc-default-login \
         --disable-strip \
-        --with-privsep-path="${TARGET_PREFIX_PATH}/var/empty"
+        --with-privsep-path="${STAPLER_TARGET_PREFIX_PATH}/var/empty"
     exit_if_error $? "openssh配置错误。" 1
 
     #编译。

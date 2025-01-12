@@ -29,9 +29,9 @@ exit_if_error()
 }
 
 #执行配置。
-if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
     exit_if_error 1 "python不支持此平台。" 0
-elif [ "${TARGET_PLATFORM}" == "arm" ];then
+elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
     exit_if_error 1 "python不支持此平台。" 0
 else
     exit_if_error 1 "python不支持此平台。" 0
@@ -41,10 +41,10 @@ fi
 PYTHON_SRC_PATH=${SHELL_PATH}/Python-3.11.5/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/bin/python3.11 ] ;then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/bin/python3.11 ] ;then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/python/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/python/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -59,16 +59,16 @@ if [ ! -f ${TARGET_PREFIX_PATH}/bin/python3.11 ] ;then
     chmod +0500 configure
 
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
         TARGET_MAKEFILE_CONF="--build=x86_64 --host=aarch64"
-    elif [ "${TARGET_PLATFORM}" == "arm" ];then
-        TARGET_MAKEFILE_CONF="--build=x86_64 --host=${TARGET_MACHINE} --target=${TARGET_MACHINE}"
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
+        TARGET_MAKEFILE_CONF="--build=x86_64 --host=${STAPLER_TARGET_MACHINE} --target=${STAPLER_TARGET_MACHINE}"
     else
         TARGET_MAKEFILE_CONF="--build=x86_64 --host=x86_64"
     fi
 
     #执行配置。
-    ./configure --prefix=${TARGET_PREFIX_PATH}/ --enable-optimizations --with-build-python=python ${TARGET_MAKEFILE_CONF} CC=${TARGET_COMPILER_C} 
+    ./configure --prefix=${STAPLER_TARGET_PREFIX_PATH}/ --enable-optimizations --with-build-python=python ${STAPLER_TARGET_MAKEFILE_CONF} CC=${STAPLER_TARGET_COMPILER_C} 
     exit_if_error $? "python配置错误。" 1
 
     #编译。

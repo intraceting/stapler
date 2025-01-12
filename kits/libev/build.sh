@@ -32,10 +32,10 @@ exit_if_error()
 LIBEV_SRC_PATH=${SHELL_PATH}/libev-4.33/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libev.a ];then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libev.a ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/libev/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/libev/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -55,9 +55,9 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libev.a ];then
     exit_if_error $? "autogen配置错误。" 1
 
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
         TARGET_MAKEFILE_CONF="--host=arm"
-    elif [ "${TARGET_PLATFORM}" == "arm" ];then
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
         TARGET_MAKEFILE_CONF="--host=arm"
     else
         TARGET_MAKEFILE_CONF="--host=x86_64"
@@ -66,10 +66,10 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libev.a ];then
     #执行配置。
     ./configure \
         ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PREFIX_PATH}/ \
-        CC=${TARGET_COMPILER_C} \
+        --prefix=${STAPLER_TARGET_PREFIX_PATH}/ \
+        CC=${STAPLER_TARGET_COMPILER_C} \
         CFLAGS="-O3 -DEOF=-1 -fPIC" \
-        CXX=${TARGET_COMPILER_CXX} \
+        CXX=${STAPLER_TARGET_COMPILER_CXX} \
         CXXFLAGS="-O3 -DEOF=-1 -fPIC"
     exit_if_error $? "libev配置错误。" 1
 

@@ -32,10 +32,10 @@ exit_if_error()
 SQLITE_SRC_PATH=${SHELL_PATH}/sqlite-autoconf-3420000/
 
 #检查是否已经创建。
-if [ ! -f ${TARGET_PREFIX_PATH}/lib/libsqlite3.a ] && [ ! -f ${TARGET_PREFIX_PATH}/lib/libsqlite3.so ] ;then
+if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libsqlite3.a ] && [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libsqlite3.so ] ;then
 {
     #临时目录。
-    BUILD_TMP_PATH=${BUILD_PATH}/sqlite/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/sqlite/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
@@ -50,9 +50,9 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libsqlite3.a ] && [ ! -f ${TARGET_PREFIX_PAT
     chmod +0500 configure
 
     #执行配置。
-    if [ "${TARGET_PLATFORM}" == "aarch64" ];then
+    if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
         TARGET_MAKEFILE_CONF="--host=aarch64"
-    elif [ "${TARGET_PLATFORM}" == "arm" ];then
+    elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
         TARGET_MAKEFILE_CONF="--host=armv7"
     else
         TARGET_MAKEFILE_CONF="--host=x86_64"
@@ -64,10 +64,10 @@ if [ ! -f ${TARGET_PREFIX_PATH}/lib/libsqlite3.a ] && [ ! -f ${TARGET_PREFIX_PAT
 
     #执行配置。
     ./configure ${TARGET_MAKEFILE_CONF} \
-        --prefix=${TARGET_PREFIX_PATH}/ \
-        CC=${TARGET_COMPILER_C} \
-        AR=${TARGET_COMPILER_AR} \
-        LD=${TARGET_COMPILER_LD} \
+        --prefix=${STAPLER_TARGET_PREFIX_PATH}/ \
+        CC=${STAPLER_TARGET_COMPILER_C} \
+        AR=${STAPLER_TARGET_COMPILER_AR} \
+        LD=${STAPLER_TARGET_COMPILER_LD} \
         "CFLAGS=-O3 -fPIC"
     exit_if_error $? "sqlite配置错误。" 1
 
