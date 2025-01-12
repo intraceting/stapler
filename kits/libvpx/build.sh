@@ -71,6 +71,7 @@ if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libvpx.so ];then
     export LD=$(${CC} "-print-prog-name=ld" 2>>/dev/null)
     export AR=$(${CC} "-print-prog-name=ar" 2>>/dev/null)
     export AS=$(${CC} "-print-prog-name=as" 2>>/dev/null)
+    export STRIP=$(${CC} "-print-prog-name=strip" 2>>/dev/null)
 
     #执行配置。
     ./configure \
