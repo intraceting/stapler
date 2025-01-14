@@ -28,8 +28,17 @@ exit_if_error()
     fi
 }
 
+#执行配置。
+if [ "${STAPLER_TARGET_PLATFORM}" == "aarch64" ];then
+    exit_if_error 1 "libvpx不支持此平台。" 0
+elif [ "${STAPLER_TARGET_PLATFORM}" == "arm" ];then
+    exit_if_error 1 "libvpx不支持此平台。" 0
+else
+    exit_if_error 1 "libvpx不支持此平台。" 0
+fi
+
 #
-X264_SRC_PATH=${SHELL_PATH}/libvpx-1.13.0/
+LIBVPX_SRC_PATH=${SHELL_PATH}/libvpx-1.13.0/
 
 #检查是否已经创建。
 if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libvpx.so ];then
@@ -41,7 +50,7 @@ if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libvpx.so ];then
     #生成临时目录。
     mkdir -p ${BUILD_TMP_PATH}/
     #复制源码到临时目录。
-    cp -rf ${X264_SRC_PATH}/* ${BUILD_TMP_PATH}/
+    cp -rf ${LIBVPX_SRC_PATH}/* ${BUILD_TMP_PATH}/
 
     #进入临时目录。
     cd ${BUILD_TMP_PATH}/
@@ -70,17 +79,29 @@ if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libvpx.so ];then
     export CXX=${STAPLER_TARGET_COMPILER_PREFIX}g++
     export LD=$(${CC} "-print-prog-name=ld" 2>>/dev/null)
     export AR=$(${CC} "-print-prog-name=ar" 2>>/dev/null)
-    export AS=$(${CC} "-print-prog-name=as" 2>>/dev/null)
+    
     export STRIP=$(${CC} "-print-prog-name=strip" 2>>/dev/null)
+    export READELF=$(${CC} "-print-prog-name=readelf" 2>>/dev/null)
+    export NM=$(${CC} "-print-prog-name=nm" 2>>/dev/null)
+    export OBJDUMP=$(${CC} "-print-prog-name=objdump" 2>>/dev/null)
+
+
+    if [ "${STAPLER_TARGET_PLATFORM}" == "x86_64" ];then
+        export AS=${STAPLER_TARGET_COMPILER_PREFIX}yasm
+    else 
+        export AS=$(${CC} "-print-prog-name=as" 2>>/dev/null)
+    fi
 
     #执行配置。
     ./configure \
         ${TARGET_MAKEFILE_CONF} \
         --prefix=${STAPLER_TARGET_PREFIX_PATH}/ \
-        --extra-cflags="-O3 -fPIC" \
+        --extra-cflags="-O3 -fPIC -pthread" \
+        --extra-cxxflags="-O3 -fPIC -pthread" \
         --enable-pic \
         --disable-examples \
         --disable-unit-tests \
+        --disable-docs \
         --enable-shared \
         --enable-static \
         --enable-libyuv \

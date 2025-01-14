@@ -74,11 +74,11 @@ if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libyasm.a ];then
 
     #编译。
     make -s -j4
-    exit_if_error $? "nasm编译错误。" 1
+    exit_if_error $? "yasm编译错误。" 1
 
      #安装。
     make install 
-    exit_if_error $? "nasm安装错误。" 1
+    exit_if_error $? "yasm安装错误。" 1
 
 
     #恢复工作目录。

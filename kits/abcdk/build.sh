@@ -39,7 +39,14 @@ if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/lib/libabcdk.so ];then
     mkdir -p ${BUILD_TMP_PATH}/
 
     #执行配置。
-    ${SRC_PATH}/configure.sh -d "BUILD_PATH=${BUILD_TMP_PATH}/" -d "BUILD_PACKAGE_PATH=${BUILD_TMP_PATH}/" -d "COMPILER_PREFIX=${STAPLER_TARGET_COMPILER_PREFIX}" -d "THIRDPARTY_PREFIX=${STAPLER_TARGET_PREFIX_PATH}" -d "INSTALL_PREFIX=${STAPLER_TARGET_PREFIX_PATH}" -d "THIRDPARTY_PACKAGES=openssl,ffmpeg,x264,x265,nghttp2,lz4"
+    ${SRC_PATH}/configure.sh \
+        -d "COMPILER_PREFIX=${STAPLER_TARGET_COMPILER_PREFIX}" \
+        -d "BUILD_PATH=${BUILD_TMP_PATH}/" \
+        -d "BUILD_PACKAGE_PATH=${BUILD_TMP_PATH}/" \
+        -d "INSTALL_PREFIX=${STAPLER_TARGET_PREFIX_PATH}" \
+        -d "THIRDPARTY_FIND_ROOT=${STAPLER_TARGET_PREFIX_PATH}" \
+        -d "THIRDPARTY_FIND_MODE=only" \
+        -d "THIRDPARTY_PACKAGES=openssl,ffmpeg,x264,x265,nghttp2,lz4"
     exit_if_error $? "abcdk配置错误。" 1
 
     #编译。

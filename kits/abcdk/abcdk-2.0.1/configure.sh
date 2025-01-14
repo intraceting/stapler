@@ -114,7 +114,7 @@ KIT_NAME=""
 
 #
 THIRDPARTY_PACKAGES="openmp,openssl,archive,libmagic,nghttp2,lz4,ffmpeg"
-THIRDPARTY_PREFIX=""
+THIRDPARTY_FIND_ROOT=""
 THIRDPARTY_FIND_MODE="both"
 THIRDPARTY_NOFOUND=""
 #
@@ -184,9 +184,9 @@ VARIABLE:
      kafka,uuid,libmagic,nghttp2,libdrm,
      pam,curl,ncurses,fltk
 
-     THIRDPARTY_PREFIX=${THIRDPARTY_PREFIX}
+     THIRDPARTY_FIND_ROOT=${THIRDPARTY_FIND_ROOT}
 
-     THIRDPARTY_PREFIX(依赖组件路径前缀)用于查找依赖组件完整路径.
+     THIRDPARTY_FIND_ROOT(依赖组件搜索根路径)用于查找依赖组件完整路径.
 
      THIRDPARTY_FIND_MODE=${THIRDPARTY_FIND_MODE}
 
@@ -310,10 +310,10 @@ if [ $? -ne 0 ];then
 fi
 
 #设置环境变量，用于搜索依赖包。
-export _PKG_TARGET_MACHINE=${_TARGET_MACHINE}
-export _PKG_TARGET_WORDBIT=${_TARGET_BITWIDE}
-export _THIRDPARTY_PKG_PREFIX=${THIRDPARTY_PREFIX}
-export _THIRDPARTY_PKG_FIND_MODE=${THIRDPARTY_FIND_MODE}
+export _3RDPARTY_PKG_MACHINE=${_TARGET_MACHINE}
+export _3RDPARTY_PKG_WORDBIT=${_TARGET_BITWIDE}
+export _3RDPARTY_PKG_FIND_ROOT=${THIRDPARTY_FIND_ROOT}
+export _3RDPARTY_PKG_FIND_MODE=${THIRDPARTY_FIND_MODE}
 
 #
 DependPackageCheck()
@@ -394,10 +394,10 @@ DependPackageCheck x264 HAVE_H264
 DependPackageCheck x265 HAVE_H265
 
 #恢复默认。
-export _PKG_TARGET_MACHINE=
-export _PKG_TARGET_WORDBIT=
-export _THIRDPARTY_PKG_PREFIX=
-export _THIRDPARTY_PKG_FIND_MODE=
+export _3RDPARTY_PKG_MACHINE=
+export _3RDPARTY_PKG_WORDBIT=
+export _3RDPARTY_PKG_FIND_ROOT=
+export _3RDPARTY_PKG_FIND_MODE=
 
 #
 if [ "${THIRDPARTY_NOFOUND}" != "" ];then
@@ -516,13 +516,22 @@ ${INSTALL_PREFIX}
 
 %post
 #!/bin/sh
+#
 echo "export PATH=\\\$PATH:${INSTALL_PREFIX}/bin" > /etc/profile.d/abcdk.sh
 echo "export LD_LIBRARY_PATH=\\\$LD_LIBRARY_PATH:${INSTALL_PREFIX}/lib" >> /etc/profile.d/abcdk.sh
+#
+echo "${INSTALL_PREFIX}/lib" > /etc/ld.so.conf.d/abcdk.sh
+ldconfig
+#
 exit 0
 
 %postun
 #!/bin/sh
+#
 rm -f /etc/profile.d/abcdk.sh
+#
+rm -f /etc/ld.so.conf.d/abcdk.sh
+#
 exit 0
 EOF
 checkReturnCode
@@ -551,12 +560,16 @@ ${INSTALL_PREFIX}
 
 %post
 #!/bin/sh
-echo "export PKG_CONFIG_PATH=\\\$PKG_CONFIG_PATH:${INSTALL_PREFIX}/pkgconfig" >/etc/profile.d/abcdk-devel.sh
+#
+echo "nothing to do."
+#
 exit 0
 
 %postun
 #!/bin/sh
-rm -f /etc/profile.d/abcdk-devel.sh
+#
+echo "nothing to do."
+#
 exit 0
 EOF
 checkReturnCode
@@ -606,8 +619,13 @@ checkReturnCode
 #
 cat >${DEB_RT_CTL}/postinst <<EOF
 #!/bin/sh
+#
 echo "export PATH=\\\$PATH:${INSTALL_PREFIX}/bin" > /etc/profile.d/abcdk.sh
 echo "export LD_LIBRARY_PATH=\\\$LD_LIBRARY_PATH:${INSTALL_PREFIX}/lib" >> /etc/profile.d/abcdk.sh
+#
+echo "${INSTALL_PREFIX}/lib" > /etc/ld.so.conf.d/abcdk.sh
+ldconfig
+#
 exit 0
 EOF
 checkReturnCode
@@ -615,7 +633,11 @@ checkReturnCode
 #
 cat >${DEB_RT_CTL}/postrm <<EOF
 #!/bin/sh
+#
 rm -f /etc/profile.d/abcdk.sh
+#
+rm -f /etc/ld.so.conf.d/abcdk.sh
+#
 exit 0
 EOF
 checkReturnCode
@@ -641,7 +663,9 @@ checkReturnCode
 #
 cat >${DEB_DEV_CTL}/postinst <<EOF
 #!/bin/sh
-echo "export PKG_CONFIG_PATH=\\\$PKG_CONFIG_PATH:${INSTALL_PREFIX}/pkgconfig" >/etc/profile.d/abcdk-devel.sh
+#
+echo "nothing to do."
+#
 exit 0
 EOF
 checkReturnCode
@@ -649,7 +673,9 @@ checkReturnCode
 #
 cat >${DEB_DEV_CTL}/postrm <<EOF
 #!/bin/sh
-rm -f /etc/profile.d/abcdk-devel.sh
+#
+echo "nothing to do."
+#
 exit 0
 EOF
 checkReturnCode
