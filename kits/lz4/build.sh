@@ -35,7 +35,7 @@ LZ4_SRC_PATH=${SHELL_PATH}/lz4-1.9.4/
 if [ ! -f ${STAPLER_TARGET_PREFIX_PATH}/bin/lz4 ];then
 {
     #临时目录。
-    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/file/
+    BUILD_TMP_PATH=${STAPLER_BUILD_PATH}/lz4/
     #删除过时的配置。
     rm -rf ${BUILD_TMP_PATH}
     #生成临时目录。
